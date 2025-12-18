@@ -1,0 +1,29 @@
+restaurantId,name,city,cuisine,rating,price,isOpen,latitude,longitude
+R1,Saravana Bhavan,Chennai,South Indian,4.4,$$,true,13.0827,80.2707
+R2,Annalakshmi,Chennai,Tamil Brahmin,4.5,$$,true,13.0827,80.2707
+R3,Buhari Hotel,Chennai,South Indian,4.3,$$,true,13.0827,80.2707
+
+R4,Sree Annapoorna,Coimbatore,South Indian,4.6,$$,true,11.0168,76.9558
+R5,Haribhavanam,Coimbatore,Chettinad,4.4,$$,true,11.0168,76.9558
+R6,Banana Leaf,Coimbatore,Multi-cuisine,4.2,$$,true,11.0168,76.9558
+
+R7,Amsavalli Bhavan,Madurai,South Indian,4.5,$,true,9.9252,78.1198
+R8,Kumar Mess,Madurai,Chettinad,4.6,$$,true,9.9252,78.1198
+
+R9,Hotel Kannappa,Trichy,South Indian,4.3,$,true,10.7905,78.7047
+R10,Ezham Suvai,Trichy,Traditional Tamil,4.1,$,true,10.7905,78.7047
+
+R11,Junior Kuppanna,Salem,South Indian,4.4,$$,true,11.6643,78.1460
+R12,Sri Krishna Bhavan,Erode,South Indian,4.2,$,true,11.3410,77.7172
+
+R13,Anandha Bhavan,Thoothukudi,Seafood,4.3,$$,true,8.7642,78.1348
+R14,Nellai Saravana Bhavan,Tirunelveli,South Indian,4.5,$,true,8.7139,77.7567
+
+R15,Sathars Restaurant,Thanjavur,South Indian,4.3,$,true,10.7870,79.1378
+R16,Venu Biriyani,Dindigul,Dindigul Biryani,4.6,$$,true,10.3673,77.9803
+
+R17,Amma Mess,Karur,South Indian,4.4,$$,true,10.9574,78.0800
+R18,Hotel Aryaas,Vellore,South Indian,4.2,$,true,12.9165,79.1325
+
+R19,Hotel GRT Regency,Kanchipuram,Multi-cuisine,4.3,$$,true,12.8342,79.7036
+R20,Hotel Cape Corner,Nagercoil,South Indian,4.5,$$,true,8.1780,77.4327

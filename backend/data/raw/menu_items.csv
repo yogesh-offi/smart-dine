@@ -1,0 +1,31 @@
+itemId,restaurantId,itemName,description,price,budgetCategory,cuisine,isVeg,spicinessLevel
+M1,R1,Idli Sambar,Steamed rice cakes with sambar,60,low,South Indian,true,1
+M2,R1,Ghee Roast Dosa,Crispy dosa roasted with ghee,110,medium,South Indian,true,1
+M3,R2,Curd Rice,Rice mixed with curd and seasoning,70,low,Tamil Brahmin,true,0
+M4,R2,Lemon Rice,Flavored rice with lemon and peanuts,80,low,Tamil Brahmin,true,1
+M5,R3,Chicken Biryani,Chennai-style chicken biryani,220,high,South Indian,false,3
+M6,R3,Chicken 65,Deep fried spicy chicken starter,180,medium,South Indian,false,4
+M7,R4,Pongal,Rice and dal porridge with ghee,90,low,South Indian,true,0
+M8,R4,Filter Coffee,Traditional coffee,40,low,South Indian,true,0
+M9,R5,Mutton Chukka,Chettinad spicy mutton fry,260,high,Chettinad,false,4
+M10,R5,Chicken Chettinad,Spicy chicken curry,230,high,Chettinad,false,4
+M11,R6,Paneer Butter Masala,Creamy paneer curry,200,medium,Multi-cuisine,true,1
+M12,R6,Veg Fried Rice,Vegetable fried rice,160,medium,Multi-cuisine,true,1
+M13,R7,Mini Tiffin,Idli dosa pongal combo,180,medium,South Indian,true,1
+M14,R7,Sambar Sadham,Rice mixed with sambar,120,medium,South Indian,true,2
+M15,R8,Mutton Biryani,Madurai-style biryani,280,high,Chettinad,false,3
+M16,R8,Kola Urundai,Spicy minced meat balls,190,medium,Chettinad,false,4
+M17,R9,South Indian Meals,Full meals with curries,130,medium,South Indian,true,2
+M18,R9,Parotta Salna,Bread with gravy,90,low,South Indian,true,2
+M19,R10,Kambu Koozh,Fermented millet porridge,60,low,Traditional Tamil,true,0
+M20,R10,Ragi Kali,Ragi ball with curry,100,low,Traditional Tamil,true,1
+M21,R11,Chicken Pepper Fry,Spicy pepper chicken,240,high,South Indian,false,4
+M22,R11,Egg Curry,Boiled eggs in spicy gravy,160,medium,South Indian,false,3
+M23,R12,Vegetable Kurma,Mixed vegetable curry,120,medium,South Indian,true,1
+M24,R12,Poori Masala,Poori with potato curry,90,low,South Indian,true,1
+M25,R13,Fish Curry,Tamarind-based fish curry,260,high,Seafood,false,3
+M26,R13,Prawn Fry,Spicy fried prawns,290,high,Seafood,false,4
+M27,R14,Idiyappam Stew,String hoppers with coconut stew,110,medium,South Indian,true,0
+M28,R14,Chicken Kuzhambu,Spicy chicken gravy,210,high,South Indian,false,3
+M29,R15,Vegetable Biryani,Thanjavur-style veg biryani,180,medium,South Indian,true,2
+M30,R15,Chicken Curry,Country chicken curry,240,high,South Indian,false,3

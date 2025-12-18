@@ -1,0 +1,33 @@
+itemName,isVeg,calories,protein,fat,carbs
+Idli Sambar,true,180,6,3,34
+Ghee Roast Dosa,true,320,8,12,42
+Curd Rice,true,220,8,5,35
+Lemon Rice,true,240,6,7,38
+Pongal,true,310,9,10,45
+Filter Coffee,true,40,1,1,6
+Paneer Butter Masala,true,420,14,28,18
+Veg Fried Rice,true,350,8,10,55
+Mini Tiffin,true,450,12,14,70
+Sambar Sadham,true,380,10,8,60
+South Indian Meals,true,650,18,20,90
+Parotta Salna,true,450,10,16,60
+Kambu Koozh,true,120,4,1,24
+Ragi Kali,true,200,6,2,44
+Vegetable Kurma,true,280,7,14,32
+Poori Masala,true,420,8,18,50
+Idiyappam Stew,true,260,6,8,40
+Vegetable Biryani,true,380,9,10,58
+Veg Thali,true,580,16,18,80
+Chicken Biryani,false,520,28,18,55
+Chicken 65,false,380,26,22,15
+Mutton Chukka,false,480,30,22,20
+Chicken Chettinad,false,460,27,20,18
+Mutton Biryani,false,620,32,24,60
+Kola Urundai,false,410,25,24,10
+Chicken Pepper Fry,false,420,29,26,8
+Egg Curry,false,260,14,18,6
+Fish Curry,false,390,32,15,12
+Prawn Fry,false,450,34,28,10
+Chicken Kuzhambu,false,410,27,18,12
+Chicken Curry,false,430,28,20,14
+Fish Molee,false,360,30,14,10

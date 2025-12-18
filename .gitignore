@@ -1,5 +1,14 @@
-node_modules/
+# Environment variables
 .env
+
+# Node
+node_modules/
+
+# Python
+ml/venv/
 __pycache__/
-*.csv
-*.zip
+*.pkl
+
+# OS
+.DS_Store
+Thumbs.db
