@@ -13,6 +13,8 @@ import savedRoutes from "./routes/savedRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import adminMenuRoutes from "./routes/adminMenuRoutes.js";
 import restaurantRoutes from "./routes/restaurantRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
+import fdcRoutes from "./routes/fdcRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,6 +34,8 @@ app.use("/api/admin/menu", adminMenuRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/tracker", trackerRoutes);
 app.use("/api/saved", savedRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/fdc", fdcRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected ✅"))

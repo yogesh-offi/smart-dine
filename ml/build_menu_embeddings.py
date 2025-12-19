@@ -34,7 +34,8 @@ for m in menu_items:
 vectorizer = TfidfVectorizer(stop_words="english")
 X = vectorizer.fit_transform(texts)
 
-with open("ml/menu_vectors.pkl", "wb") as f:
+vector_path = os.path.join(os.path.dirname(__file__), "menu_vectors.pkl")
+with open(vector_path, "wb") as f:
     pickle.dump((vectorizer, X, meta), f)
 
-print("✅ Menu embeddings built and saved")
+print("Menu embeddings built and saved successfully")

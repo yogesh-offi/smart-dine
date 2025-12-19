@@ -15,6 +15,11 @@ const calorieLogSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    mealType: {
+      type: String,
+      enum: ["breakfast", "lunch", "dinner", "snack"],
+      default: "snack"
+    },
     date: {
       type: Date,
       default: Date.now,

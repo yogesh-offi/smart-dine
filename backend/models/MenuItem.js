@@ -24,16 +24,21 @@ const menuItemSchema = new mongoose.Schema({
     max: 4
   },
 
+  calories: {
+    type: Number,
+    default: 200
+  },
+  
   nutrition: {
-  calories: Number,
-  protein: Number,
-  fat: Number,
-  carbs: Number,
-  source: {
-    type: String, // "FDC" | "SEED" | "ESTIMATED"
-    default: "ESTIMATED"
+    protein: { type: Number, default: 0 },
+    fat: { type: Number, default: 0 },
+    carbs: { type: Number, default: 0 },
+    source: {
+      type: String,
+      enum: ["FDC_API", "ESTIMATED", "MANUAL"],
+      default: "ESTIMATED"
+    }
   }
-}
 
 
 }, { timestamps: true });

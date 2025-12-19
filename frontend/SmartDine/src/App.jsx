@@ -6,6 +6,8 @@ import Profile from "./pages/Profile";
 import Restaurants from "./pages/Restaurants";
 import Menu from "./pages/Menu";
 import Chat from "./pages/Chat";
+import Dashboard from "./pages/Dashboard";
+import History from "./pages/History";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
       <Route path="/restaurants" element={<Restaurants />} />
       <Route path="/menu/:restaurantId" element={<Menu />} />
       <Route path="/chat" element={<Chat />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/history" element={<History />} />
     </Routes>
   );
 }

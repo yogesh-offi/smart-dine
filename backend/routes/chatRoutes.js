@@ -176,21 +176,80 @@ async function getDishesFromLLM(prompt, maxRetries = 1) {
   return null;
 }
 
-/* ------------------ CONSTRAINT EXTRACTION ------------------ */
+/* ------------------ ENHANCED CONSTRAINT EXTRACTION ------------------ */
 function extractConstraints(message) {
   const msg = message.toLowerCase();
 
-  return {
-    isVeg: msg.includes("veg") && !msg.includes("non"),
-    isNonVeg:
-      msg.includes("non") ||
-      msg.includes("chicken") ||
-      msg.includes("mutton") ||
-      msg.includes("fish") ||
-      msg.includes("egg"),
+  // Mood and emotion-based mappings
+  const moodMappings = {
+    // Comfort food moods
+    comfort: ["comfort", "cozy", "homely", "warm", "soothing", "nostalgic"],
+    spicy: ["spicy", "hot", "fiery", "burning", "kick", "heat", "chili", "pepper"],
+    mild: ["mild", "gentle", "light", "subtle", "less spicy", "not spicy"],
+    rich: ["rich", "creamy", "indulgent", "heavy", "satisfying", "filling"],
+    fresh: ["fresh", "light", "healthy", "clean", "refreshing", "crisp"],
+    sweet: ["sweet", "dessert", "sugary", "treat", "candy"]
+  };
 
-    spicy: msg.includes("spicy"),
-    mild: msg.includes("less spicy") || msg.includes("mild")
+  // Craving-based mappings
+  const cravingMappings = {
+    protein: ["protein", "meat", "chicken", "mutton", "fish", "egg", "paneer"],
+    carbs: ["rice", "bread", "naan", "roti", "biryani", "pasta", "noodles"],
+    fried: ["fried", "crispy", "crunchy", "deep fried", "golden"],
+    curry: ["curry", "gravy", "sauce", "masala", "kuzhambu"]
+  };
+
+  // Emotional state mappings
+  const emotionMappings = {
+    stressed: ["stressed", "tired", "exhausted", "overwhelmed"],
+    happy: ["celebrating", "party", "festive", "joyful", "excited"],
+    sad: ["sad", "down", "blue", "comfort me", "cheer up"],
+    energetic: ["energetic", "active", "boost", "power", "fuel"]
+  };
+
+  // Check for mood indicators
+  let spicyScore = 0;
+  let mildScore = 0;
+  let richScore = 0;
+  let freshScore = 0;
+
+  // Analyze mood words
+  Object.entries(moodMappings).forEach(([mood, keywords]) => {
+    keywords.forEach(keyword => {
+      if (msg.includes(keyword)) {
+        if (mood === 'spicy') spicyScore++;
+        if (mood === 'mild') mildScore++;
+        if (mood === 'rich') richScore++;
+        if (mood === 'fresh') freshScore++;
+      }
+    });
+  });
+
+  // Analyze emotional context
+  emotionMappings.stressed.forEach(word => {
+    if (msg.includes(word)) richScore += 2; // Comfort food when stressed
+  });
+  
+  emotionMappings.happy.forEach(word => {
+    if (msg.includes(word)) spicyScore += 1; // Celebratory spicy food
+  });
+
+  return {
+    // Traditional constraints
+    isVeg: (msg.includes("veg") && !msg.includes("non")) || msg.includes("vegetarian"),
+    isNonVeg: msg.includes("non") || 
+               cravingMappings.protein.some(word => msg.includes(word)),
+
+    // Enhanced mood-based constraints
+    spicy: spicyScore > mildScore || msg.includes("spicy"),
+    mild: mildScore > spicyScore || msg.includes("mild"),
+    rich: richScore > 0,
+    fresh: freshScore > 0,
+    
+    // Craving-based constraints
+    wantsFried: cravingMappings.fried.some(word => msg.includes(word)),
+    wantsCurry: cravingMappings.curry.some(word => msg.includes(word)),
+    wantsRice: cravingMappings.carbs.some(word => msg.includes(word))
   };
 }
 
@@ -263,10 +322,66 @@ Respond ONLY in valid JSON:
     const llmResult = await getDishesFromLLM(prompt, 1);
     console.log("🤖 LLM Result:", llmResult);
 
-    if (!llmResult || !Array.isArray(llmResult.dishes)) {
+    if (!llmResult || !Array.isArray(llmResult.dishes) || llmResult.dishes.length === 0) {
+      console.log("⚠️ LLM returned no dishes, trying constraint-based fallback");
+      
+      // Fallback: search directly by constraints if LLM fails
+      const constraints = extractConstraints(message);
+      let fallbackQuery = {};
+      
+      if (constraints.isVeg) fallbackQuery.isVeg = true;
+      if (constraints.isNonVeg) fallbackQuery.isVeg = false;
+      if (constraints.spicy) fallbackQuery.spicinessLevel = { $gte: 3 };
+      if (constraints.mild) fallbackQuery.spicinessLevel = { $lte: 2 };
+      
+      const fallbackItems = await MenuItem.find(fallbackQuery).populate("restaurantId").limit(10);
+      
+      if (fallbackItems.length > 0) {
+        console.log(`🔄 Fallback found ${fallbackItems.length} items`);
+        
+        const mapped = fallbackItems.map(item => ({
+          dish: item.name,
+          calories: item.calories || 200,
+          isVeg: item.isVeg,
+          spiceLevel: item.spicinessLevel,
+          restaurant: {
+            name: item.restaurantId?.name || "Unknown",
+            city: item.restaurantId?.location?.city || "Unknown",
+            rating: item.restaurantId?.rating || 3.5,
+            sentimentScore: item.restaurantId?.sentimentScore || 0,
+            latitude: item.restaurantId?.location?.latitude || "0",
+            longitude: item.restaurantId?.location?.longitude || "0"
+          }
+        }));
+        
+        // Apply location filtering and ranking
+        let filtered = mapped;
+        if (userLocation?.lat != null && userLocation?.lng != null) {
+          filtered = mapped
+            .map(r => {
+              const lat = parseFloat(r.restaurant.latitude);
+              const lng = parseFloat(r.restaurant.longitude);
+              if (isNaN(lat) || isNaN(lng)) return null;
+              const distanceKm = getDistanceKm(userLocation.lat, userLocation.lng, lat, lng);
+              if (isNaN(distanceKm)) return null;
+              return { ...r, distanceKm };
+            })
+            .filter(Boolean)
+            .filter(r => r.distanceKm <= 500);
+        }
+        
+        const ranked = rankResults(filtered);
+        
+        return res.json({
+          recommendations: ranked,
+          totalCalories: ranked.reduce((sum, r) => sum + r.calories, 0),
+          note: "Found using constraint-based search"
+        });
+      }
+      
       return res.json({
         recommendations: [],
-        note: "LLM failed to identify dishes"
+        note: "No dishes found matching your preferences"
       });
     }
 
@@ -275,14 +390,44 @@ Respond ONLY in valid JSON:
     let allRecommendations = [];
 
     for (const dish of llmResult.dishes) {
-      const query = { name: new RegExp(dish, "i") };
+      let query = { name: new RegExp(dish, "i") };
 
+      // Apply diet constraints
       if (constraints.isVeg) query.isVeg = true;
       if (constraints.isNonVeg) query.isVeg = false;
+      
+      // Apply spice level constraints
       if (constraints.spicy) query.spicinessLevel = { $gte: 3 };
-      if (constraints.mild) query.spicinessLevel = { $lte: 1 };
+      if (constraints.mild) query.spicinessLevel = { $lte: 2 };
+
+      console.log(`🔍 Searching for dish: "${dish}" with constraints:`, constraints);
+      console.log(`📋 MongoDB query:`, JSON.stringify(query));
 
       const items = await MenuItem.find(query).populate("restaurantId");
+      console.log(`📊 Found ${items.length} items for "${dish}"`);
+      
+      // If no exact matches and we have mood constraints, try broader search
+      if (items.length === 0 && (constraints.wantsFried || constraints.wantsCurry)) {
+        let broadQuery = {};
+        
+        // Apply diet constraints to broad search
+        if (constraints.isVeg) broadQuery.isVeg = true;
+        if (constraints.isNonVeg) broadQuery.isVeg = false;
+        if (constraints.spicy) broadQuery.spicinessLevel = { $gte: 3 };
+        if (constraints.mild) broadQuery.spicinessLevel = { $lte: 2 };
+        
+        // Add mood-based name matching
+        if (constraints.wantsFried) {
+          broadQuery.name = /fry|fried|crispy/i;
+        } else if (constraints.wantsCurry) {
+          broadQuery.name = /curry|gravy|masala|kuzhambu/i;
+        }
+        
+        console.log(`🔄 Trying broader search:`, JSON.stringify(broadQuery));
+        const broadItems = await MenuItem.find(broadQuery).populate("restaurantId").limit(5);
+        console.log(`📊 Broad search found ${broadItems.length} items`);
+        items.push(...broadItems);
+      }
 
       const mapped = items.map(item => ({
         dish: item.name,
@@ -292,12 +437,12 @@ Respond ONLY in valid JSON:
 
         /* 🔁 Normalize DB fields here */
         restaurant: {
-          name: item.restaurantId.name,
-          city: item.restaurantId.location.city,
-          rating: item.restaurantId.rating,
-          sentimentScore: item.restaurantId.sentimentScore || 0,
-          latitude: item.restaurantId.location.latitude,
-          longitude: item.restaurantId.location.longitude
+          name: item.restaurantId?.name || "Unknown",
+          city: item.restaurantId?.location?.city || "Unknown",
+          rating: item.restaurantId?.rating || 3.5,
+          sentimentScore: item.restaurantId?.sentimentScore || 0,
+          latitude: item.restaurantId?.location?.latitude || "0",
+          longitude: item.restaurantId?.location?.longitude || "0"
         }
       }));
 
@@ -355,14 +500,56 @@ if (userLocation?.lat != null && userLocation?.lng != null) {
     /* ------------------ 🔥 RANKING (DAY 24) ------------------ */
     const ranked = rankResults(filtered);
 
+    /* ------------------ GROUP BY DISH NAME ------------------ */
+    const groupedDishes = {};
+    
+    ranked.forEach(item => {
+      const dishKey = item.dish.toLowerCase().trim();
+      
+      if (!groupedDishes[dishKey]) {
+        groupedDishes[dishKey] = {
+          dish: item.dish,
+          calories: item.calories,
+          isVeg: item.isVeg,
+          spiceLevel: item.spiceLevel,
+          restaurants: [],
+          bestScore: item.finalScore
+        };
+      }
+      
+      // Add restaurant to the dish
+      groupedDishes[dishKey].restaurants.push({
+        name: item.restaurant.name,
+        city: item.restaurant.city,
+        rating: item.restaurant.rating,
+        distanceKm: item.distanceKm,
+        finalScore: item.finalScore,
+        reasoning: item.reasoning
+      });
+      
+      // Update best score if this restaurant is better
+      if (item.finalScore > groupedDishes[dishKey].bestScore) {
+        groupedDishes[dishKey].bestScore = item.finalScore;
+      }
+    });
+    
+    // Sort restaurants within each dish by score
+    Object.values(groupedDishes).forEach(dish => {
+      dish.restaurants.sort((a, b) => b.finalScore - a.finalScore);
+    });
+    
+    // Convert to array and sort dishes by best restaurant score
+    const groupedRecommendations = Object.values(groupedDishes)
+      .sort((a, b) => b.bestScore - a.bestScore);
+
     /* ------------------ FINAL RESPONSE ------------------ */
     return res.json({
-      recommendations: ranked,
-      totalCalories: ranked.reduce(
+      recommendations: groupedRecommendations,
+      totalCalories: groupedRecommendations.reduce(
         (sum, r) => sum + r.calories,
         0
       ),
-      note: "Ranked using distance, rating, and sentiment"
+      note: "Grouped by dish with ranked restaurants"
     });
 
   } catch (err) {

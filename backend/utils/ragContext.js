@@ -9,8 +9,9 @@ export function getRagContext(query) {
   return new Promise((resolve, reject) => {
     // 🔥 ABSOLUTE path to ml/rag_runner.py
     const scriptPath = path.join(__dirname, "..", "..", "ml", "rag_runner.py");
+    const pythonPath = path.resolve(__dirname, "..", "..", "ml", "venv", "Scripts", "python.exe");
 
-    execFile("python", [scriptPath, query], (err, stdout, stderr) => {
+    execFile(pythonPath, [scriptPath, query], (err, stdout, stderr) => {
       if (err) {
         console.error("❌ RAG Python error:", stderr);
         return reject(err);
