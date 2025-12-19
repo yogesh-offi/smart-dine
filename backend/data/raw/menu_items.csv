@@ -29,3 +29,452 @@ M27,R14,Idiyappam Stew,String hoppers with coconut stew,110,medium,South Indian,
 M28,R14,Chicken Kuzhambu,Spicy chicken gravy,210,high,South Indian,false,3
 M29,R15,Vegetable Biryani,Thanjavur-style veg biryani,180,medium,South Indian,true,2
 M30,R15,Chicken Curry,Country chicken curry,240,high,South Indian,false,3
+M31,R16,Dindigul Biryani,Famous mutton biryani,300,high,Dindigul Biryani,false,3
+M32,R16,Chicken Biryani,Dindigul-style chicken biryani,250,high,Dindigul Biryani,false,3
+M33,R17,Chicken Gravy,Spicy chicken curry,200,medium,South Indian,false,3
+M34,R17,Fish Fry,Crispy fried fish,220,medium,South Indian,false,2
+M35,R18,Masala Dosa,Crispy dosa with potato filling,120,medium,South Indian,true,1
+M36,R18,Chicken Tikka,Grilled chicken pieces,240,high,South Indian,false,2
+M37,R19,Butter Chicken,North Indian chicken curry,280,high,Multi-cuisine,false,2
+M38,R19,Paneer Tikka,Grilled cottage cheese,220,medium,Multi-cuisine,true,1
+M39,R20,Fish Curry,Kerala-style fish curry,250,high,South Indian,false,3
+M40,R20,Appam Stew,Rice pancakes with stew,140,medium,South Indian,true,0
+
+M141,R1,Rava Dosa,Crispy semolina crepe,120,medium,South Indian,true,1
+M142,R1,Masala Dosa,Stuffed potato crepe,130,medium,South Indian,true,1
+M143,R1,Vada Sambar,Fried lentil donuts with curry,80,low,South Indian,true,1
+M144,R1,Uttapam,Thick pancake with vegetables,110,medium,South Indian,true,1
+M145,R1,Pongal Ghee,Rice lentil porridge with ghee,100,medium,South Indian,true,0
+M146,R1,Coconut Chutney,Fresh coconut condiment,30,low,South Indian,true,0
+M147,R1,Tomato Rice,Rice with tomato and spices,90,low,South Indian,true,1
+M148,R1,Tamarind Rice,Tangy tamarind rice,85,low,South Indian,true,2
+M149,R1,Rasam,Spiced tamarind soup,50,low,South Indian,true,1
+M150,R1,Payasam,Sweet rice pudding,70,low,South Indian,true,0
+
+M151,R2,Vegetable Sambar,Mixed vegetable lentil curry,90,low,Tamil Brahmin,true,2
+M152,R2,Coconut Rice,Rice with fresh coconut,80,low,Tamil Brahmin,true,0
+M153,R2,Mor Kuzhambu,Yogurt-based curry,100,medium,Tamil Brahmin,true,1
+M154,R2,Poriyal,Stir-fried vegetables,70,low,Tamil Brahmin,true,1
+M155,R2,Kootu,Lentil vegetable stew,85,low,Tamil Brahmin,true,1
+M156,R2,Rasam Rice,Rice with spiced soup,75,low,Tamil Brahmin,true,1
+M157,R2,Pickle Rice,Rice with spicy pickle,70,low,Tamil Brahmin,true,3
+M158,R2,Ghee Rice,Rice cooked in clarified butter,110,medium,Tamil Brahmin,true,0
+M159,R2,Sweet Pongal,Sweet rice and lentil dish,90,low,Tamil Brahmin,true,0
+M160,R2,Buttermilk,Spiced yogurt drink,40,low,Tamil Brahmin,true,0
+
+M161,R3,Mutton Biryani,Chennai-style mutton biryani,280,high,South Indian,false,3
+M162,R3,Fish Fry,Spicy fried fish,220,medium,South Indian,false,3
+M163,R3,Prawn Curry,Spicy prawn curry,260,high,South Indian,false,3
+M164,R3,Egg Curry,Boiled eggs in gravy,160,medium,South Indian,false,3
+M165,R3,Chicken Curry,Traditional chicken curry,200,medium,South Indian,false,3
+M166,R3,Mutton Curry,Spicy mutton curry,250,high,South Indian,false,4
+M167,R3,Chicken Fry,Crispy fried chicken,190,medium,South Indian,false,4
+M168,R3,Fish Curry,Traditional fish curry,210,medium,South Indian,false,3
+M169,R3,Prawn Fry,Spicy fried prawns,240,high,South Indian,false,4
+M170,R3,Chicken Tikka,Grilled chicken pieces,220,medium,South Indian,false,2
+
+M171,R4,Masala Dosa,Stuffed potato crepe,120,medium,South Indian,true,1
+M172,R4,Idli Vada,Steamed cakes with fried donuts,90,low,South Indian,true,1
+M173,R4,Rava Dosa,Crispy semolina crepe,110,medium,South Indian,true,1
+M174,R4,Uttapam,Thick vegetable pancake,100,medium,South Indian,true,1
+M175,R4,Sambar Rice,Rice with lentil curry,95,low,South Indian,true,2
+M176,R4,Rasam Rice,Rice with spiced soup,85,low,South Indian,true,1
+M177,R4,Curd Rice,Rice with yogurt,70,low,South Indian,true,0
+M178,R4,Coconut Chutney,Fresh coconut condiment,25,low,South Indian,true,0
+M179,R4,Vada Sambar,Fried donuts with curry,75,low,South Indian,true,1
+M180,R4,Payasam,Sweet rice pudding,60,low,South Indian,true,0
+
+M181,R5,Fish Chettinad,Spicy Chettinad fish,280,high,Chettinad,false,4
+M182,R5,Prawn Chettinad,Spicy Chettinad prawns,300,high,Chettinad,false,4
+M183,R5,Egg Chettinad,Spicy Chettinad egg curry,180,medium,Chettinad,false,4
+M184,R5,Crab Chettinad,Spicy Chettinad crab,350,high,Chettinad,false,4
+M185,R5,Vegetable Chettinad,Spicy mixed vegetables,160,medium,Chettinad,true,3
+M186,R5,Pepper Chicken,Black pepper chicken,240,high,Chettinad,false,4
+M187,R5,Kola Urundai,Spicy meat balls,200,medium,Chettinad,false,4
+M188,R5,Chettinad Biryani,Aromatic spiced biryani,280,high,Chettinad,false,3
+M189,R5,Mutton Pepper Fry,Spicy mutton with pepper,320,high,Chettinad,false,4
+M190,R5,Chicken Roast,Dry roasted chicken,250,high,Chettinad,false,4
+
+M191,R6,Chicken Fried Rice,Chicken fried rice,180,medium,Multi-cuisine,false,1
+M192,R6,Gobi Manchurian,Cauliflower in spicy sauce,160,medium,Multi-cuisine,true,2
+M193,R6,Chicken Manchurian,Indo-Chinese chicken,200,medium,Multi-cuisine,false,2
+M194,R6,Noodles Veg,Vegetable noodles,140,medium,Multi-cuisine,true,1
+M195,R6,Chicken Noodles,Chicken noodles,170,medium,Multi-cuisine,false,1
+M196,R6,Paneer Tikka,Grilled cottage cheese,190,medium,Multi-cuisine,true,1
+M197,R6,Chicken Tikka,Grilled chicken pieces,220,medium,Multi-cuisine,false,2
+M198,R6,Dal Makhani,Creamy black lentil curry,170,medium,Multi-cuisine,true,1
+M199,R6,Mixed Fried Rice,Chicken and egg fried rice,200,medium,Multi-cuisine,false,1
+M200,R6,Jeera Rice,Cumin flavored rice,120,medium,Multi-cuisine,true,0
+
+M201,R7,Chicken Curry,Spicy chicken curry,190,medium,South Indian,false,3
+M202,R7,Mutton Curry,Spicy mutton curry,260,high,South Indian,false,4
+M203,R7,Fish Curry,Traditional fish curry,200,medium,South Indian,false,3
+M204,R7,Egg Curry,Boiled eggs in gravy,150,medium,South Indian,false,3
+M205,R7,Vegetable Curry,Mixed vegetable curry,110,medium,South Indian,true,1
+M206,R7,Dal Curry,Yellow lentil curry,80,low,South Indian,true,1
+M207,R7,Chicken Fry,Spicy fried chicken,210,medium,South Indian,false,4
+M208,R7,Fish Fry,Crispy fried fish,190,medium,South Indian,false,3
+M209,R7,Prawn Curry,Spicy prawn curry,230,high,South Indian,false,3
+M210,R7,Chicken Biryani,Madurai-style chicken biryani,220,high,South Indian,false,3
+
+M211,R8,Fish Chettinad,Spicy Chettinad fish,270,high,Chettinad,false,4
+M212,R8,Prawn Chettinad,Spicy Chettinad prawns,290,high,Chettinad,false,4
+M213,R8,Chicken Chettinad,Spicy Chettinad chicken,250,high,Chettinad,false,4
+M214,R8,Egg Chettinad,Spicy Chettinad egg curry,170,medium,Chettinad,false,4
+M215,R8,Crab Chettinad,Spicy Chettinad crab,340,high,Chettinad,false,4
+M216,R8,Pepper Mutton,Black pepper mutton,310,high,Chettinad,false,4
+M217,R8,Vegetable Chettinad,Spicy mixed vegetables,150,medium,Chettinad,true,3
+M218,R8,Chicken Roast,Dry roasted chicken,240,high,Chettinad,false,4
+M219,R8,Mutton Pepper Fry,Spicy mutton with pepper,300,high,Chettinad,false,4
+M220,R8,Chettinad Fish Fry,Spicy fried fish,260,high,Chettinad,false,4
+
+M221,R9,Chicken Curry,Traditional chicken curry,180,medium,South Indian,false,3
+M222,R9,Mutton Curry,Spicy mutton curry,250,high,South Indian,false,4
+M223,R9,Fish Curry,Home-style fish curry,190,medium,South Indian,false,3
+M224,R9,Egg Curry,Simple egg curry,140,medium,South Indian,false,2
+M225,R9,Vegetable Curry,Mixed vegetable curry,100,medium,South Indian,true,1
+M226,R9,Dal Curry,Yellow lentil curry,75,low,South Indian,true,1
+M227,R9,Chicken Fry,Spicy fried chicken,200,medium,South Indian,false,4
+M228,R9,Fish Fry,Crispy fried fish,180,medium,South Indian,false,3
+M229,R9,Prawn Curry,Spicy prawn curry,220,high,South Indian,false,3
+M230,R9,Chicken Biryani,Trichy-style chicken biryani,210,high,South Indian,false,3
+
+M231,R10,Chicken Kuzhambu,Spicy chicken gravy,200,medium,Traditional Tamil,false,3
+M232,R10,Mutton Kuzhambu,Spicy mutton gravy,270,high,Traditional Tamil,false,4
+M233,R10,Fish Kuzhambu,Traditional fish curry,220,medium,Traditional Tamil,false,3
+M234,R10,Egg Kuzhambu,Egg in spicy gravy,160,medium,Traditional Tamil,false,3
+M235,R10,Vegetable Kuzhambu,Mixed vegetable curry,120,medium,Traditional Tamil,true,2
+M236,R10,Sambar,Lentil and vegetable stew,70,low,Traditional Tamil,true,2
+M237,R10,Rasam,Spiced tamarind soup,50,low,Traditional Tamil,true,1
+M238,R10,Poriyal,Stir-fried vegetables,80,low,Traditional Tamil,true,1
+M239,R10,Kootu,Lentil and vegetable stew,90,low,Traditional Tamil,true,1
+M240,R10,Mor Kuzhambu,Yogurt-based curry,100,medium,Traditional Tamil,true,1
+
+M241,R11,Mutton Pepper Fry,Spicy mutton with pepper,290,high,South Indian,false,4
+M242,R11,Fish Curry,Traditional fish curry,210,medium,South Indian,false,3
+M243,R11,Prawn Curry,Spicy prawn curry,250,high,South Indian,false,3
+M244,R11,Chicken Curry,Spicy chicken curry,190,medium,South Indian,false,3
+M245,R11,Mutton Curry,Spicy mutton curry,260,high,South Indian,false,4
+M246,R11,Fish Fry,Crispy fried fish,200,medium,South Indian,false,3
+M247,R11,Prawn Fry,Spicy fried prawns,230,high,South Indian,false,4
+M248,R11,Chicken Fry,Spicy fried chicken,220,medium,South Indian,false,4
+M249,R11,Mutton Biryani,Salem-style mutton biryani,270,high,South Indian,false,3
+M250,R11,Chicken Biryani,Salem-style chicken biryani,200,medium,South Indian,false,3
+
+M251,R12,Chicken Curry,Traditional chicken curry,170,medium,South Indian,false,3
+M252,R12,Mutton Curry,Spicy mutton curry,240,high,South Indian,false,4
+M253,R12,Fish Curry,Home-style fish curry,180,medium,South Indian,false,3
+M254,R12,Egg Curry,Simple egg curry,130,medium,South Indian,false,2
+M255,R12,Dal Curry,Yellow lentil curry,70,low,South Indian,true,1
+M256,R12,Sambar Rice,Rice with lentil curry,85,low,South Indian,true,2
+M257,R12,Rasam Rice,Rice with spiced soup,75,low,South Indian,true,1
+M258,R12,Curd Rice,Cooling yogurt rice,60,low,South Indian,true,0
+M259,R12,Chicken Fry,Spicy fried chicken,190,medium,South Indian,false,4
+M260,R12,Fish Fry,Crispy fried fish,170,medium,South Indian,false,3
+
+M261,R13,Crab Masala,Spicy crab preparation,330,high,Seafood,false,4
+M262,R13,Squid Fry,Crispy fried squid,280,high,Seafood,false,3
+M263,R13,Fish Biryani,Seafood biryani,300,high,Seafood,false,2
+M264,R13,Crab Curry,Spicy crab curry,320,high,Seafood,false,3
+M265,R13,Fish Tikka,Grilled fish pieces,250,high,Seafood,false,2
+M266,R13,Prawn Masala,Rich prawn curry,290,high,Seafood,false,3
+M267,R13,Squid Curry,Spicy squid curry,270,high,Seafood,false,3
+M268,R13,Fish Fry Masala,Spicy fried fish,260,high,Seafood,false,4
+M269,R13,Crab Roast,Dry roasted crab,340,high,Seafood,false,4
+M270,R13,Prawn Biryani,Prawn biryani,310,high,Seafood,false,2
+
+M271,R14,Mutton Curry,Spicy mutton curry,250,high,South Indian,false,4
+M272,R14,Fish Curry,Traditional fish curry,200,medium,South Indian,false,3
+M273,R14,Prawn Curry,Spicy prawn curry,240,high,South Indian,false,3
+M274,R14,Egg Curry,Boiled eggs in gravy,150,medium,South Indian,false,3
+M275,R14,Vegetable Curry,Mixed vegetable curry,110,medium,South Indian,true,1
+M276,R14,Dal Curry,Yellow lentil curry,80,low,South Indian,true,1
+M277,R14,Chicken Fry,Spicy fried chicken,210,medium,South Indian,false,4
+M278,R14,Fish Fry,Crispy fried fish,190,medium,South Indian,false,3
+M279,R14,Mutton Biryani,Tirunelveli-style mutton biryani,270,high,South Indian,false,3
+M280,R14,Chicken Biryani,Tirunelveli-style chicken biryani,220,high,South Indian,false,3
+
+M281,R15,Chicken Curry,Country chicken curry,220,high,South Indian,false,3
+M282,R15,Mutton Curry,Spicy mutton curry,280,high,South Indian,false,4
+M283,R15,Fish Curry,Traditional fish curry,210,medium,South Indian,false,3
+M284,R15,Prawn Curry,Spicy prawn curry,250,high,South Indian,false,3
+M285,R15,Egg Curry,Boiled eggs in gravy,160,medium,South Indian,false,3
+M286,R15,Chicken Fry,Spicy fried chicken,230,high,South Indian,false,4
+M287,R15,Fish Fry,Crispy fried fish,200,medium,South Indian,false,3
+M288,R15,Mutton Biryani,Thanjavur-style mutton biryani,300,high,South Indian,false,3
+M289,R15,Chicken Biryani,Thanjavur-style chicken biryani,240,high,South Indian,false,3
+M290,R15,Prawn Fry,Spicy fried prawns,260,high,South Indian,false,4
+
+M291,R16,Mutton Biryani,Famous Dindigul mutton biryani,320,high,Dindigul Biryani,false,3
+M292,R16,Chicken Curry,Dindigul-style chicken curry,220,high,Dindigul Biryani,false,3
+M293,R16,Mutton Curry,Spicy mutton curry,280,high,Dindigul Biryani,false,4
+M294,R16,Egg Biryani,Dindigul-style egg biryani,180,medium,Dindigul Biryani,false,2
+M295,R16,Chicken Fry,Spicy fried chicken,240,high,Dindigul Biryani,false,4
+M296,R16,Mutton Fry,Spicy fried mutton,300,high,Dindigul Biryani,false,4
+M297,R16,Vegetable Biryani,Dindigul-style veg biryani,160,medium,Dindigul Biryani,true,2
+M298,R16,Chicken 65,Deep fried spicy chicken,200,medium,Dindigul Biryani,false,4
+M299,R16,Mutton 65,Deep fried spicy mutton,260,high,Dindigul Biryani,false,4
+M300,R16,Biryani Rice,Plain biryani rice,100,medium,Dindigul Biryani,true,0
+
+M301,R17,Mutton Curry,Spicy mutton curry,260,high,South Indian,false,4
+M302,R17,Prawn Curry,Spicy prawn curry,240,high,South Indian,false,3
+M303,R17,Egg Curry,Boiled eggs in gravy,150,medium,South Indian,false,3
+M304,R17,Chicken Curry,Traditional chicken curry,190,medium,South Indian,false,3
+M305,R17,Vegetable Curry,Mixed vegetable curry,110,medium,South Indian,true,1
+M306,R17,Dal Curry,Yellow lentil curry,80,low,South Indian,true,1
+M307,R17,Chicken Fry,Spicy fried chicken,210,medium,South Indian,false,4
+M308,R17,Mutton Fry,Spicy fried mutton,280,high,South Indian,false,4
+M309,R17,Prawn Fry,Spicy fried prawns,250,high,South Indian,false,4
+M310,R17,Chicken Biryani,Karur-style chicken biryani,210,high,South Indian,false,3
+
+M311,R18,Chicken Curry,Traditional chicken curry,180,medium,South Indian,false,3
+M312,R18,Mutton Curry,Spicy mutton curry,250,high,South Indian,false,4
+M313,R18,Fish Curry,Home-style fish curry,190,medium,South Indian,false,3
+M314,R18,Egg Curry,Simple egg curry,140,medium,South Indian,false,2
+M315,R18,Vegetable Curry,Mixed vegetable curry,100,medium,South Indian,true,1
+M316,R18,Dal Curry,Yellow lentil curry,75,low,South Indian,true,1
+M317,R18,Chicken Fry,Spicy fried chicken,200,medium,South Indian,false,4
+M318,R18,Fish Fry,Crispy fried fish,180,medium,South Indian,false,3
+M319,R18,Mutton Biryani,Vellore-style mutton biryani,260,high,South Indian,false,3
+M320,R18,Chicken Biryani,Vellore-style chicken biryani,200,medium,South Indian,false,3
+
+M321,R19,Chicken Curry,North Indian chicken curry,260,high,Multi-cuisine,false,2
+M322,R19,Dal Makhani,Creamy black lentil curry,180,medium,Multi-cuisine,true,1
+M323,R19,Naan Plain,Indian bread,60,low,Multi-cuisine,true,0
+M324,R19,Jeera Rice,Cumin flavored rice,120,medium,Multi-cuisine,true,0
+M325,R19,Palak Paneer,Spinach with cottage cheese,200,medium,Multi-cuisine,true,1
+M326,R19,Chicken Biryani,Aromatic chicken biryani,240,high,Multi-cuisine,false,2
+M327,R19,Mutton Curry,Spicy mutton curry,280,high,Multi-cuisine,false,3
+M328,R19,Fish Curry,Multi-cuisine fish curry,220,medium,Multi-cuisine,false,2
+M329,R19,Vegetable Biryani,Mixed vegetable biryani,180,medium,Multi-cuisine,true,2
+M330,R19,Raita,Yogurt with vegetables,50,low,Multi-cuisine,true,0
+
+M331,R20,Chicken Curry,Kerala-style chicken curry,230,high,South Indian,false,3
+M332,R20,Mutton Curry,Spicy mutton curry,270,high,South Indian,false,4
+M333,R20,Prawn Curry,Kerala-style prawn curry,260,high,South Indian,false,3
+M334,R20,Egg Curry,Coconut-based egg curry,170,medium,South Indian,false,2
+M335,R20,Vegetable Curry,Kerala-style vegetable curry,130,medium,South Indian,true,1
+M336,R20,Sambar,Lentil and vegetable stew,80,low,South Indian,true,2
+M337,R20,Rasam,Spiced tamarind soup,60,low,South Indian,true,1
+M338,R20,Chicken Fry,Kerala-style chicken fry,240,high,South Indian,false,3
+M339,R20,Fish Fry,Kerala-style fish fry,210,medium,South Indian,false,3
+M340,R20,Puttu Kadala,Steamed rice cake with curry,120,medium,South Indian,true,1
+
+M41,R21,Paneer Makhani,Rich paneer curry,240,high,North Indian,true,1
+M42,R21,Dal Makhani,Creamy black lentil curry,180,medium,North Indian,true,1
+M43,R21,Naan Butter,Buttered Indian bread,80,low,North Indian,true,0
+M44,R21,Chicken Butter Masala,Creamy chicken curry,260,high,North Indian,false,2
+M45,R21,Palak Paneer,Spinach with cottage cheese,200,medium,North Indian,true,1
+M46,R21,Biryani Veg,Vegetable biryani,180,medium,North Indian,true,2
+M47,R21,Tandoori Chicken,Clay oven roasted chicken,280,high,North Indian,false,3
+M48,R21,Raita,Yogurt with cucumber,60,low,North Indian,true,0
+M49,R21,Gulab Jamun,Sweet milk dumplings,100,low,North Indian,true,0
+M50,R21,Lassi Sweet,Sweet yogurt drink,80,low,North Indian,true,0
+
+M51,R22,Fish Fry Masala,Spicy fried fish,280,high,Seafood,false,4
+M52,R22,Prawn Curry,Coconut-based prawn curry,320,high,Seafood,false,3
+M53,R22,Crab Masala,Spicy crab preparation,350,high,Seafood,false,4
+M54,R22,Fish Curry,Traditional fish curry,260,high,Seafood,false,3
+M55,R22,Squid Fry,Crispy fried squid,300,high,Seafood,false,3
+M56,R22,Prawn Fry,Spicy fried prawns,290,high,Seafood,false,4
+M57,R22,Fish Biryani,Seafood biryani,320,high,Seafood,false,2
+M58,R22,Crab Curry,Spicy crab curry,340,high,Seafood,false,3
+M59,R22,Fish Tikka,Grilled fish pieces,270,high,Seafood,false,2
+M60,R22,Prawn Masala,Rich prawn curry,310,high,Seafood,false,3
+
+M61,R23,Idli Vada,Steamed cakes with fried lentil donuts,90,low,South Indian,true,1
+M62,R23,Dosa Plain,Plain crispy crepe,80,low,South Indian,true,0
+M63,R23,Sambar Rice,Rice with lentil curry,100,medium,South Indian,true,2
+M64,R23,Rasam Rice,Rice with spiced soup,90,low,South Indian,true,1
+M65,R23,Curd Rice,Rice with yogurt,70,low,South Indian,true,0
+M66,R23,Pongal Ghee,Rice and lentil porridge with ghee,110,medium,South Indian,true,0
+M67,R23,Vada Sambar,Fried lentil donuts with curry,80,low,South Indian,true,1
+M68,R23,Upma,Semolina porridge,70,low,South Indian,true,0
+M69,R23,Coconut Rice,Rice with coconut,90,low,South Indian,true,0
+M70,R23,Filter Coffee,Traditional South Indian coffee,40,low,South Indian,true,0
+
+M71,R24,Chicken Curry,Spicy chicken gravy,200,medium,South Indian,false,3
+M72,R24,Mutton Curry,Spicy mutton gravy,280,high,South Indian,false,4
+M73,R24,Fish Curry,Traditional fish curry,220,medium,South Indian,false,3
+M74,R24,Egg Curry,Boiled eggs in spicy gravy,160,medium,South Indian,false,3
+M75,R24,Vegetable Curry,Mixed vegetable curry,120,medium,South Indian,true,1
+M76,R24,Dal Curry,Lentil curry,100,low,South Indian,true,1
+M77,R24,Chicken Fry,Spicy fried chicken,240,high,South Indian,false,4
+M78,R24,Mutton Fry,Spicy fried mutton,300,high,South Indian,false,4
+M79,R24,Prawn Curry,Spicy prawn curry,260,high,South Indian,false,3
+M80,R24,Chicken Biryani,Tiruppur-style chicken biryani,220,high,South Indian,false,3
+
+M81,R25,Paneer Butter Masala,Creamy cottage cheese curry,220,medium,Multi-cuisine,true,1
+M82,R25,Chicken Manchurian,Indo-Chinese chicken,240,high,Multi-cuisine,false,2
+M83,R25,Veg Fried Rice,Vegetable fried rice,160,medium,Multi-cuisine,true,1
+M84,R25,Chicken Fried Rice,Chicken fried rice,200,medium,Multi-cuisine,false,1
+M85,R25,Gobi Manchurian,Cauliflower in spicy sauce,180,medium,Multi-cuisine,true,2
+M86,R25,Noodles Veg,Vegetable noodles,150,medium,Multi-cuisine,true,1
+M87,R25,Chicken Noodles,Chicken noodles,190,medium,Multi-cuisine,false,1
+M88,R25,Paneer Tikka,Grilled cottage cheese,200,medium,Multi-cuisine,true,1
+M89,R25,Chicken Tikka,Grilled chicken pieces,240,high,Multi-cuisine,false,2
+M90,R25,Mixed Fried Rice,Chicken and egg fried rice,220,medium,Multi-cuisine,false,1
+
+M91,R26,South Indian Meals,Traditional full meals,140,medium,South Indian,true,2
+M92,R26,Sambar Vada,Lentil donuts in curry,90,low,South Indian,true,1
+M93,R26,Rasam Vada,Lentil donuts in spiced soup,85,low,South Indian,true,1
+M94,R26,Lemon Rice,Tangy lemon flavored rice,80,low,South Indian,true,1
+M95,R26,Tamarind Rice,Rice with tamarind sauce,90,low,South Indian,true,2
+M96,R26,Coconut Rice,Rice with fresh coconut,85,low,South Indian,true,0
+M97,R26,Vegetable Biryani,Aromatic vegetable rice,170,medium,South Indian,true,2
+M98,R26,Curd Rice,Cooling yogurt rice,70,low,South Indian,true,0
+M99,R26,Pickle Rice,Rice with spicy pickle,75,low,South Indian,true,3
+M100,R26,Ghee Rice,Rice cooked in clarified butter,120,medium,South Indian,true,0
+
+M101,R27,Chicken Kuzhambu,Spicy chicken gravy,210,high,Traditional Tamil,false,3
+M102,R27,Mutton Kuzhambu,Spicy mutton gravy,290,high,Traditional Tamil,false,4
+M103,R27,Fish Kuzhambu,Traditional fish curry,240,high,Traditional Tamil,false,3
+M104,R27,Egg Kuzhambu,Egg in spicy gravy,170,medium,Traditional Tamil,false,3
+M105,R27,Vegetable Kuzhambu,Mixed vegetable curry,130,medium,Traditional Tamil,true,2
+M106,R27,Sambar,Lentil and vegetable stew,80,low,Traditional Tamil,true,2
+M107,R27,Rasam,Spiced tamarind soup,60,low,Traditional Tamil,true,1
+M108,R27,Poriyal,Stir-fried vegetables,90,low,Traditional Tamil,true,1
+M109,R27,Kootu,Lentil and vegetable stew,100,medium,Traditional Tamil,true,1
+M110,R27,Mor Kuzhambu,Yogurt-based curry,110,medium,Traditional Tamil,true,1
+
+M111,R28,Idli Sambar,Steamed rice cakes with curry,70,low,South Indian,true,1
+M112,R28,Dosa Masala,Stuffed crispy crepe,130,medium,South Indian,true,1
+M113,R28,Vada Sambar,Fried lentil donuts with curry,85,low,South Indian,true,1
+M114,R28,Pongal Venn,Rice and lentil porridge,95,low,South Indian,true,0
+M115,R28,Upma Rava,Semolina porridge,75,low,South Indian,true,0
+M116,R28,Poori Bhaji,Fried bread with potato curry,100,medium,South Indian,true,1
+M117,R28,Chapati Curry,Wheat bread with curry,110,medium,South Indian,true,1
+M118,R28,Rice Meals,Traditional South Indian thali,150,medium,South Indian,true,2
+M119,R28,Curd Rice,Yogurt rice,65,low,South Indian,true,0
+M120,R28,Payasam,Sweet rice pudding,80,low,South Indian,true,0
+
+M121,R29,Chicken Chettinad,Spicy Chettinad chicken,280,high,Chettinad,false,4
+M122,R29,Mutton Chettinad,Spicy Chettinad mutton,350,high,Chettinad,false,4
+M123,R29,Fish Chettinad,Spicy Chettinad fish,300,high,Chettinad,false,4
+M124,R29,Prawn Chettinad,Spicy Chettinad prawns,320,high,Chettinad,false,4
+M125,R29,Crab Chettinad,Spicy Chettinad crab,380,high,Chettinad,false,4
+M126,R29,Egg Chettinad,Spicy Chettinad egg curry,200,medium,Chettinad,false,4
+M127,R29,Vegetable Chettinad,Spicy mixed vegetables,180,medium,Chettinad,true,3
+M128,R29,Chettinad Biryani,Aromatic spiced biryani,300,high,Chettinad,false,3
+M129,R29,Pepper Chicken,Black pepper chicken,260,high,Chettinad,false,4
+M130,R29,Kola Urundai,Spicy meat balls,220,medium,Chettinad,false,4
+
+M131,R30,Chicken Curry,Traditional chicken curry,190,medium,South Indian,false,3
+M132,R30,Mutton Curry,Spicy mutton curry,270,high,South Indian,false,4
+M133,R30,Fish Curry,Home-style fish curry,210,medium,South Indian,false,3
+M134,R30,Egg Curry,Simple egg curry,150,medium,South Indian,false,2
+M135,R30,Dal Curry,Yellow lentil curry,90,low,South Indian,true,1
+M136,R30,Vegetable Curry,Mixed vegetable curry,110,medium,South Indian,true,1
+M137,R30,Sambar Rice,Rice with lentil curry,95,low,South Indian,true,2
+M138,R30,Rasam Rice,Rice with spiced soup,85,low,South Indian,true,1
+M139,R30,Curd Rice,Cooling yogurt rice,65,low,South Indian,true,0
+M140,R30,Chicken Biryani,Palani-style chicken biryani,210,high,South Indian,false,3
+M341,R31,Idli Sambar,Steamed rice cakes with curry,70,low,South Indian,true,1
+M342,R31,Dosa Masala,Stuffed potato crepe,120,medium,South Indian,true,1
+M343,R31,Vada Sambar,Fried lentil donuts with curry,80,low,South Indian,true,1
+M344,R31,Pongal Ghee,Rice and lentil porridge with ghee,90,low,South Indian,true,0
+M345,R31,Sambar Rice,Rice with lentil curry,95,low,South Indian,true,2
+M346,R31,Rasam Rice,Rice with spiced soup,85,low,South Indian,true,1
+M347,R31,Curd Rice,Cooling yogurt rice,65,low,South Indian,true,0
+M348,R31,Filter Coffee,Traditional South Indian coffee,35,low,South Indian,true,0
+M349,R31,Coconut Rice,Rice with fresh coconut,80,low,South Indian,true,0
+M350,R31,Payasam,Sweet rice pudding,70,low,South Indian,true,0
+
+M351,R32,Chicken Kuzhambu,Spicy chicken gravy,200,medium,Traditional Tamil,false,3
+M352,R32,Mutton Kuzhambu,Spicy mutton gravy,280,high,Traditional Tamil,false,4
+M353,R32,Fish Kuzhambu,Traditional fish curry,220,medium,Traditional Tamil,false,3
+M354,R32,Egg Kuzhambu,Egg in spicy gravy,160,medium,Traditional Tamil,false,3
+M355,R32,Prawn Curry,Spicy prawn curry,250,high,Traditional Tamil,false,3
+M356,R32,Chicken Fry,Spicy fried chicken,210,medium,Traditional Tamil,false,4
+M357,R32,Fish Fry,Crispy fried fish,190,medium,Traditional Tamil,false,3
+M358,R32,Mutton Fry,Spicy fried mutton,290,high,Traditional Tamil,false,4
+M359,R32,Prawn Fry,Spicy fried prawns,240,high,Traditional Tamil,false,4
+M360,R32,Chicken Biryani,Sattur-style chicken biryani,210,high,Traditional Tamil,false,3
+
+M361,R33,Paneer Butter Masala,Creamy cottage cheese curry,200,medium,Multi-cuisine,true,1
+M362,R33,Chicken Fried Rice,Chicken fried rice,180,medium,Multi-cuisine,false,1
+M363,R33,Veg Fried Rice,Vegetable fried rice,150,medium,Multi-cuisine,true,1
+M364,R33,Chicken Manchurian,Indo-Chinese chicken,220,medium,Multi-cuisine,false,2
+M365,R33,Gobi Manchurian,Cauliflower in spicy sauce,170,medium,Multi-cuisine,true,2
+M366,R33,Chicken Noodles,Chicken noodles,190,medium,Multi-cuisine,false,1
+M367,R33,Veg Noodles,Vegetable noodles,160,medium,Multi-cuisine,true,1
+M368,R33,Chicken Tikka,Grilled chicken pieces,230,high,Multi-cuisine,false,2
+M369,R33,Paneer Tikka,Grilled cottage cheese,200,medium,Multi-cuisine,true,1
+M370,R33,Mixed Fried Rice,Chicken and egg fried rice,210,medium,Multi-cuisine,false,1
+
+M371,R34,South Indian Meals,Traditional full meals,140,medium,South Indian,true,2
+M372,R34,Chicken Curry,Spicy chicken curry,200,medium,South Indian,false,3
+M373,R34,Mutton Curry,Spicy mutton curry,270,high,South Indian,false,4
+M374,R34,Fish Curry,Traditional fish curry,210,medium,South Indian,false,3
+M375,R34,Egg Curry,Boiled eggs in gravy,160,medium,South Indian,false,3
+M376,R34,Prawn Curry,Spicy prawn curry,250,high,South Indian,false,3
+M377,R34,Chicken Fry,Spicy fried chicken,220,medium,South Indian,false,4
+M378,R34,Fish Fry,Crispy fried fish,200,medium,South Indian,false,3
+M379,R34,Chicken Biryani,Virudhunagar-style chicken biryani,220,high,South Indian,false,3
+M380,R34,Mutton Biryani,Virudhunagar-style mutton biryani,280,high,South Indian,false,3
+
+M381,R35,Idli Vada,Steamed cakes with fried donuts,85,low,South Indian,true,1
+M382,R35,Dosa Plain,Plain crispy crepe,75,low,South Indian,true,0
+M383,R35,Masala Dosa,Stuffed potato crepe,115,medium,South Indian,true,1
+M384,R35,Uttapam,Thick vegetable pancake,95,low,South Indian,true,1
+M385,R35,Pongal Venn,Rice and lentil porridge,85,low,South Indian,true,0
+M386,R35,Sambar Vada,Lentil donuts in curry,80,low,South Indian,true,1
+M387,R35,Coconut Chutney,Fresh coconut condiment,25,low,South Indian,true,0
+M388,R35,Filter Coffee,Traditional coffee,35,low,South Indian,true,0
+M389,R35,Lemon Rice,Tangy lemon rice,75,low,South Indian,true,1
+M390,R35,Curd Rice,Yogurt rice,60,low,South Indian,true,0
+
+M391,R36,Chicken Chettinad,Spicy Chettinad chicken,260,high,Chettinad,false,4
+M392,R36,Mutton Chettinad,Spicy Chettinad mutton,320,high,Chettinad,false,4
+M393,R36,Fish Chettinad,Spicy Chettinad fish,280,high,Chettinad,false,4
+M394,R36,Prawn Chettinad,Spicy Chettinad prawns,300,high,Chettinad,false,4
+M395,R36,Egg Chettinad,Spicy Chettinad egg curry,190,medium,Chettinad,false,4
+M396,R36,Pepper Chicken,Black pepper chicken,250,high,Chettinad,false,4
+M397,R36,Kola Urundai,Spicy meat balls,210,medium,Chettinad,false,4
+M398,R36,Chettinad Biryani,Aromatic spiced biryani,290,high,Chettinad,false,3
+M399,R36,Chicken Roast,Dry roasted chicken,240,high,Chettinad,false,4
+M400,R36,Mutton Pepper Fry,Spicy mutton with pepper,310,high,Chettinad,false,4
+
+M401,R37,Chicken Curry,Traditional chicken curry,190,medium,South Indian,false,3
+M402,R37,Mutton Curry,Spicy mutton curry,260,high,South Indian,false,4
+M403,R37,Fish Curry,Home-style fish curry,200,medium,South Indian,false,3
+M404,R37,Egg Curry,Simple egg curry,150,medium,South Indian,false,2
+M405,R37,Vegetable Curry,Mixed vegetable curry,110,medium,South Indian,true,1
+M406,R37,Dal Curry,Yellow lentil curry,80,low,South Indian,true,1
+M407,R37,Chicken Fry,Spicy fried chicken,210,medium,South Indian,false,4
+M408,R37,Fish Fry,Crispy fried fish,190,medium,South Indian,false,3
+M409,R37,Chicken Biryani,Sivakasi-style chicken biryani,210,high,South Indian,false,3
+M410,R37,Prawn Curry,Spicy prawn curry,240,high,South Indian,false,3
+
+M411,R38,Paneer Makhani,Rich paneer curry,220,medium,Multi-cuisine,true,1
+M412,R38,Chicken Butter Masala,Creamy chicken curry,250,high,Multi-cuisine,false,2
+M413,R38,Dal Makhani,Creamy black lentil curry,170,medium,Multi-cuisine,true,1
+M414,R38,Chicken Fried Rice,Chicken fried rice,190,medium,Multi-cuisine,false,1
+M415,R38,Veg Fried Rice,Vegetable fried rice,160,medium,Multi-cuisine,true,1
+M416,R38,Chicken Manchurian,Indo-Chinese chicken,230,high,Multi-cuisine,false,2
+M417,R38,Gobi Manchurian,Cauliflower in sauce,180,medium,Multi-cuisine,true,2
+M418,R38,Naan Butter,Buttered Indian bread,70,low,Multi-cuisine,true,0
+M419,R38,Chicken Tikka,Grilled chicken pieces,240,high,Multi-cuisine,false,2
+M420,R38,Jeera Rice,Cumin flavored rice,110,medium,Multi-cuisine,true,0
+
+M421,R39,South Indian Meals,Traditional full meals,130,medium,South Indian,true,2
+M422,R39,Chicken Curry,Spicy chicken curry,180,medium,South Indian,false,3
+M423,R39,Mutton Curry,Spicy mutton curry,250,high,South Indian,false,4
+M424,R39,Fish Curry,Traditional fish curry,190,medium,South Indian,false,3
+M425,R39,Egg Curry,Boiled eggs in gravy,140,medium,South Indian,false,3
+M426,R39,Vegetable Curry,Mixed vegetable curry,100,medium,South Indian,true,1
+M427,R39,Dal Curry,Yellow lentil curry,70,low,South Indian,true,1
+M428,R39,Chicken Fry,Spicy fried chicken,200,medium,South Indian,false,4
+M429,R39,Fish Fry,Crispy fried fish,180,medium,South Indian,false,3
+M430,R39,Chicken Biryani,Rajapalayam-style chicken biryani,200,medium,South Indian,false,3
+
+M431,R40,Chicken Kuzhambu,Spicy chicken gravy,190,medium,Traditional Tamil,false,3
+M432,R40,Mutton Kuzhambu,Spicy mutton gravy,270,high,Traditional Tamil,false,4
+M433,R40,Fish Kuzhambu,Traditional fish curry,210,medium,Traditional Tamil,false,3
+M434,R40,Egg Kuzhambu,Egg in spicy gravy,150,medium,Traditional Tamil,false,3
+M435,R40,Vegetable Kuzhambu,Mixed vegetable curry,120,medium,Traditional Tamil,true,2
+M436,R40,Sambar,Lentil and vegetable stew,70,low,Traditional Tamil,true,2
+M437,R40,Rasam,Spiced tamarind soup,50,low,Traditional Tamil,true,1
+M438,R40,Poriyal,Stir-fried vegetables,80,low,Traditional Tamil,true,1
+M439,R40,Kootu,Lentil and vegetable stew,90,low,Traditional Tamil,true,1
+M440,R40,Mor Kuzhambu,Yogurt-based curry,100,medium,Traditional Tamil,true,1

@@ -5,9 +5,7 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Restaurants from "./pages/Restaurants";
 import Menu from "./pages/Menu";
-
-
-
+import Chat from "./pages/Chat";
 
 function App() {
   return (
@@ -18,6 +16,7 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/restaurants" element={<Restaurants />} />
       <Route path="/menu/:restaurantId" element={<Menu />} />
+      <Route path="/chat" element={<Chat />} />
     </Routes>
   );
 }

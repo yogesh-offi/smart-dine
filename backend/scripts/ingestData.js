@@ -44,8 +44,8 @@ async function ingest() {
         isOpen: r.isOpen === "true",
         location: {
           city: r.city,
-          latitude: Number(r.latitude),
-          longitude: Number(r.longitude)
+          latitude: r.latitude, // Keep as string to match your existing data structure
+          longitude: r.longitude
         }
 
       });

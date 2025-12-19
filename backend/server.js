@@ -8,6 +8,8 @@ import authRoutes from "./routes/authRoutes.js";
 import menuRoutes from "./routes/menuRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
+import trackerRoutes from "./routes/trackerRoutes.js";
+import savedRoutes from "./routes/savedRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import adminMenuRoutes from "./routes/adminMenuRoutes.js";
 import restaurantRoutes from "./routes/restaurantRoutes.js";
@@ -28,6 +30,8 @@ app.use("/api/menu", menuRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/admin/menu", adminMenuRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/tracker", trackerRoutes);
+app.use("/api/saved", savedRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected ✅"))

@@ -10,7 +10,8 @@ export async function askGroq(prompt) {
     const response = await client.chat.completions.create({
       model: "openai/gpt-oss-20b",
       messages: [{ role: "user", content: prompt }],
-      max_tokens: 500,
+      temperature: 0.2,
+      max_tokens: 300,
     });
 
     return response.choices[0]?.message?.content || "No response";
