@@ -156,24 +156,92 @@ import MenuItem from "../models/MenuItem.js";
 
 const router = express.Router();
 
-/* ------------------ SAFE LLM PARSER ------------------ */
-async function getDishesFromLLM(prompt, maxRetries = 1) {
+/* ------------------ SAFE LLM PARSER WITH CONVERSATION ------------------ */
+async function getChatResponseFromLLM(prompt, maxRetries = 2) {
   for (let i = 0; i <= maxRetries; i++) {
-    const raw = await askGroq(prompt);
-
-    console.log(`🔁 Attempt ${i + 1} RAW RESPONSE:\n`, raw);
-
-    if (!raw || raw.toLowerCase().includes("no response")) continue;
-
-    const cleaned = raw.replace(/```json|```/g, "").trim();
-
     try {
-      return JSON.parse(cleaned);
-    } catch {
-      console.error("❌ JSON parse failed, retrying...");
+      const raw = await askGroq(prompt);
+      console.log(`🔁 Attempt ${i + 1} RAW RESPONSE:\n`, raw);
+
+      if (!raw || raw.toLowerCase().includes("no response")) continue;
+
+      // Clean HTML entities first
+      const cleanedRaw = raw.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
+      
+      // Try multiple JSON extraction strategies
+      let jsonStr = null;
+      let conversationText = cleanedRaw;
+      
+      // Strategy 1: Look for complete JSON block
+      const completeJsonMatch = cleanedRaw.match(/\{[\s\S]*?"dishes"[\s\S]*?\]/s);
+      if (completeJsonMatch) {
+        jsonStr = completeJsonMatch[0] + '}';
+        conversationText = cleanedRaw.replace(completeJsonMatch[0], '').replace(/```json|```/g, '').trim();
+      }
+      
+      // Strategy 2: Look for partial JSON and try to complete it
+      if (!jsonStr) {
+        const partialMatch = cleanedRaw.match(/\{[\s\S]*?"dishes"[\s\S]*?\[([^\]]*)/s);
+        if (partialMatch) {
+          const dishesContent = partialMatch[1];
+          // Extract dish names from partial content
+          const dishMatches = dishesContent.match(/"([^"]+)"/g);
+          if (dishMatches) {
+            const dishes = dishMatches.map(d => d.replace(/"/g, ''));
+            jsonStr = `{"dishes": [${dishes.map(d => `"${d}"`).join(', ')}]}`;
+            conversationText = cleanedRaw.substring(0, partialMatch.index).trim();
+          }
+        }
+      }
+      
+      // Strategy 3: Extract any quoted food items as fallback
+      if (!jsonStr) {
+        const quotedItems = cleanedRaw.match(/"([A-Za-z\s]+(?:Curry|Rice|Biryani|Masala|Fry|Kuzhambu|Sambar|Rasam|Dosa|Idli|Vada|Parotta))"/gi);
+        if (quotedItems && quotedItems.length > 0) {
+          const dishes = quotedItems.slice(0, 3).map(item => item.replace(/"/g, ''));
+          jsonStr = `{"dishes": [${dishes.map(d => `"${d}"`).join(', ')}]}`;
+        }
+      }
+      
+      if (jsonStr) {
+        try {
+          const parsed = JSON.parse(jsonStr);
+          console.log('✅ Successfully parsed JSON:', parsed);
+          
+          return {
+            dishes: Array.isArray(parsed.dishes) ? parsed.dishes : [],
+            conversation: conversationText || "Here are some great options for you!",
+            rawResponse: raw
+          };
+        } catch (parseError) {
+          console.warn('⚠️ JSON parse failed for:', jsonStr, parseError.message);
+        }
+      }
+      
+      // If all JSON strategies fail, return conversation only
+      return {
+        dishes: [],
+        conversation: conversationText || "Let me find some great options for you!",
+        rawResponse: raw
+      };
+      
+    } catch (error) {
+      console.error(`❌ Attempt ${i + 1} failed:`, error.message);
+      if (i === maxRetries) {
+        return {
+          dishes: [],
+          conversation: "I'm having trouble understanding your request right now. Let me suggest some popular dishes instead!",
+          rawResponse: null
+        };
+      }
     }
   }
-  return null;
+  
+  return {
+    dishes: [],
+    conversation: "I'm experiencing some technical difficulties. Let me try a different approach!",
+    rawResponse: null
+  };
 }
 
 /* ------------------ ENHANCED CONSTRAINT EXTRACTION ------------------ */
@@ -297,31 +365,37 @@ router.post("/", async (req, res) => {
       return res.status(500).json({ error: "RAG failed" });
     }
 
-    /* ------------------ MULTI-DISH PROMPT ------------------ */
+    /* ------------------ CONVERSATIONAL PROMPT ------------------ */
     const prompt = `
-You are Smart Dine, a food recommendation assistant.
+You are Smart Dine, a friendly and helpful food recommendation assistant. You understand food cravings, moods, and preferences.
 
-Use ONLY the menu items provided below.
+User says: "${message}"
+
+Based on the menu items below, provide a warm, conversational response followed by dish recommendations.
 
 MENU CONTEXT:
 ${context}
 
-User query:
-"${message}"
+Respond in this format:
+1. First, give a friendly, understanding response about their request (2-3 sentences)
+2. Then provide JSON with dish recommendations
 
-Return 1 to 3 suitable dish names.
-
-Respond ONLY in valid JSON:
+Example:
+"I totally understand that craving for something spicy and comforting! Based on your mood, I think these dishes would be perfect for you right now.
 
 {
-  "dishes": ["", ""]
-}
-`;
+  "dishes": ["Chicken Curry", "Mutton Biryani"]
+}"
+
+Be empathetic, supportive, and make food suggestions that match their emotional state or preferences.`;
 
     /* ------------------ LLM CALL ------------------ */
-    const llmResult = await getDishesFromLLM(prompt, 1);
+    const llmResult = await getChatResponseFromLLM(prompt, 2);
     console.log("🤖 LLM Result:", llmResult);
 
+    // Store conversation for response
+    const aiConversation = llmResult.conversation || "Let me find some great options for you!";
+    
     if (!llmResult || !Array.isArray(llmResult.dishes) || llmResult.dishes.length === 0) {
       console.log("⚠️ LLM returned no dishes, trying constraint-based fallback");
       
@@ -339,48 +413,71 @@ Respond ONLY in valid JSON:
       if (fallbackItems.length > 0) {
         console.log(`🔄 Fallback found ${fallbackItems.length} items`);
         
-        const mapped = fallbackItems.map(item => ({
-          dish: item.name,
-          calories: item.calories || 200,
-          isVeg: item.isVeg,
-          spiceLevel: item.spicinessLevel,
-          restaurant: {
+        // Group fallback items by dish name and add location filtering
+        const dishGroups = {};
+        
+        fallbackItems.forEach(item => {
+          const dishKey = item.name.toLowerCase().trim();
+          
+          if (!dishGroups[dishKey]) {
+            dishGroups[dishKey] = {
+              dish: item.name,
+              calories: item.calories || 200,
+              isVeg: item.isVeg,
+              spiceLevel: item.spicinessLevel,
+              restaurants: []
+            };
+          }
+          
+          // Add restaurant info
+          dishGroups[dishKey].restaurants.push({
             name: item.restaurantId?.name || "Unknown",
             city: item.restaurantId?.location?.city || "Unknown",
             rating: item.restaurantId?.rating || 3.5,
             sentimentScore: item.restaurantId?.sentimentScore || 0,
             latitude: item.restaurantId?.location?.latitude || "0",
             longitude: item.restaurantId?.location?.longitude || "0"
-          }
-        }));
+          });
+        });
         
-        // Apply location filtering and ranking
-        let filtered = mapped;
+        // Convert to array format
+        let groupedFallback = Object.values(dishGroups);
+        
+        // Apply location filtering to each restaurant within dishes
         if (userLocation?.lat != null && userLocation?.lng != null) {
-          filtered = mapped
-            .map(r => {
-              const lat = parseFloat(r.restaurant.latitude);
-              const lng = parseFloat(r.restaurant.longitude);
-              if (isNaN(lat) || isNaN(lng)) return null;
-              const distanceKm = getDistanceKm(userLocation.lat, userLocation.lng, lat, lng);
-              if (isNaN(distanceKm)) return null;
-              return { ...r, distanceKm };
-            })
-            .filter(Boolean)
-            .filter(r => r.distanceKm <= 500);
+          groupedFallback = groupedFallback.map(dish => {
+            const filteredRestaurants = dish.restaurants
+              .map(r => {
+                const lat = parseFloat(r.latitude);
+                const lng = parseFloat(r.longitude);
+                if (isNaN(lat) || isNaN(lng)) return null;
+                const distanceKm = getDistanceKm(userLocation.lat, userLocation.lng, lat, lng);
+                if (isNaN(distanceKm) || distanceKm > 500) return null;
+                return { ...r, distanceKm };
+              })
+              .filter(Boolean)
+              .sort((a, b) => {
+                const scoreA = a.rating * 0.5 + (a.sentimentScore || 0) * 0.3 + ((30 - a.distanceKm) / 30) * 0.2;
+                const scoreB = b.rating * 0.5 + (b.sentimentScore || 0) * 0.3 + ((30 - b.distanceKm) / 30) * 0.2;
+                return scoreB - scoreA;
+              });
+            
+            return filteredRestaurants.length > 0 ? { ...dish, restaurants: filteredRestaurants } : null;
+          })
+          .filter(Boolean);
         }
         
-        const ranked = rankResults(filtered);
-        
         return res.json({
-          recommendations: ranked,
-          totalCalories: ranked.reduce((sum, r) => sum + r.calories, 0),
+          recommendations: groupedFallback,
+          totalCalories: groupedFallback.reduce((sum, r) => sum + r.calories, 0),
+          conversation: "I found some great options that match what you're looking for! Here are my recommendations based on your preferences:",
           note: "Found using constraint-based search"
         });
       }
       
       return res.json({
         recommendations: [],
+        conversation: "I'm sorry, I couldn't find any dishes that match your specific preferences right now. Could you try describing what you're in the mood for differently? Maybe mention a cuisine type or specific ingredient?",
         note: "No dishes found matching your preferences"
       });
     }
@@ -455,6 +552,7 @@ Respond ONLY in valid JSON:
     if (!allRecommendations.length) {
       return res.json({
         recommendations: [],
+        conversation: "Hmm, I couldn't find exact matches for what you mentioned. Let me suggest some popular dishes that might interest you instead! What type of cuisine are you in the mood for?",
         note: "No dishes matched constraints"
       });
     }
@@ -542,13 +640,29 @@ if (userLocation?.lat != null && userLocation?.lng != null) {
     const groupedRecommendations = Object.values(groupedDishes)
       .sort((a, b) => b.bestScore - a.bestScore);
 
-    /* ------------------ FINAL RESPONSE ------------------ */
+    /* ------------------ FINAL RESPONSE WITH CONVERSATION ------------------ */
+    const totalCalories = groupedRecommendations.reduce((sum, r) => sum + r.calories, 0);
+    
+    // Generate supportive message based on results
+    let supportiveMessage = aiConversation;
+    if (groupedRecommendations.length > 0) {
+      const calorieAdvice = totalCalories > 800 ? 
+        " These are quite hearty options - perfect if you're really hungry!" :
+        totalCalories < 400 ?
+        " These are lighter options that won't weigh you down." :
+        " These should satisfy your craving perfectly!";
+      
+      supportiveMessage += calorieAdvice;
+      
+      if (groupedRecommendations.some(d => d.spiceLevel >= 4)) {
+        supportiveMessage += " I noticed you might enjoy some heat - these spicy options should hit the spot!";
+      }
+    }
+    
     return res.json({
       recommendations: groupedRecommendations,
-      totalCalories: groupedRecommendations.reduce(
-        (sum, r) => sum + r.calories,
-        0
-      ),
+      totalCalories,
+      conversation: supportiveMessage,
       note: "Grouped by dish with ranked restaurants"
     });
 

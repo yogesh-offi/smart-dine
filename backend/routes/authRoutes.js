@@ -24,13 +24,29 @@ router.post("/signup", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await User.create({
+    const newUser = await User.create({
       name,
       email,
       password: hashedPassword
     });
 
-    res.status(201).json({ message: "User registered successfully" });
+    const token = jwt.sign(
+      { userId: newUser._id },
+      "smartdine_secret",
+      { expiresIn: "1d" }
+    );
+
+    res.status(201).json({ 
+      message: "User registered successfully",
+      token,
+      user: {
+        _id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        preferences: newUser.preferences,
+        health: newUser.health
+      }
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -53,7 +69,16 @@ router.post("/login", async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.json({ token, userId: user._id });
+    res.json({ 
+      token, 
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        preferences: user.preferences,
+        health: user.health
+      }
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

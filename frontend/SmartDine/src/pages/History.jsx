@@ -1,167 +1,219 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function History() {
-  const [history, setHistory] = useState([]);
+  const [historyData, setHistoryData] = useState([]);
+  const [aiSuggestions, setAiSuggestions] = useState('');
   const [loading, setLoading] = useState(true);
-  const [selectedDays, setSelectedDays] = useState(7);
+  const [days, setDays] = useState(7);
   
-  const userId = localStorage.getItem("userId");
+  const getUserId = () => {
+    try {
+      const user = localStorage.getItem('user');
+      if (user && user !== 'undefined') {
+        return JSON.parse(user)?._id;
+      }
+      return localStorage.getItem('userId');
+    } catch (error) {
+      return localStorage.getItem('userId');
+    }
+  };
+  
+  const userId = getUserId();
 
   useEffect(() => {
     if (userId) {
       fetchHistory();
+    } else {
+      console.error('No userId found');
+      setLoading(false);
     }
-  }, [userId, selectedDays]);
+  }, [userId, days]);
 
   const fetchHistory = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const response = await axios.get(`http://localhost:5000/api/dashboard/history/${userId}?days=${selectedDays}`);
-      setHistory(response.data.history);
+      const [historyRes, suggestionsRes] = await Promise.all([
+        axios.get(`http://localhost:5000/api/dashboard/history/${userId}?days=${days}`),
+        axios.get(`http://localhost:5000/api/dashboard/ai-insights/${userId}?days=${days}`)
+      ]);
+      
+      setHistoryData(historyRes.data.history);
+      setAiSuggestions(suggestionsRes.data.insights);
     } catch (err) {
-      console.error("History fetch error:", err);
+      console.error('History fetch error:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    
-    if (date.toDateString() === today.toDateString()) {
-      return "Today";
-    } else if (date.toDateString() === yesterday.toDateString()) {
-      return "Yesterday";
-    } else {
-      return date.toLocaleDateString('en-US', { 
-        weekday: 'short', 
-        month: 'short', 
-        day: 'numeric' 
-      });
-    }
+  if (loading) return <div style={{ padding: '20px' }}>Loading history...</div>;
+
+  // Calculate stats for visualizations
+  const totalDays = historyData.length;
+  const avgCalories = totalDays > 0 ? Math.round(historyData.reduce((sum, day) => sum + day.totalCalories, 0) / totalDays) : 0;
+  const calorieGoal = 2000; // Should come from user profile
+  const daysOverGoal = historyData.filter(day => day.totalCalories > calorieGoal).length;
+  const adherenceRate = totalDays > 0 ? Math.round(((totalDays - daysOverGoal) / totalDays) * 100) : 0;
+
+  // Meal frequency analysis
+  const mealFrequency = {
+    breakfast: historyData.reduce((sum, day) => sum + day.meals.breakfast.length, 0),
+    lunch: historyData.reduce((sum, day) => sum + day.meals.lunch.length, 0),
+    dinner: historyData.reduce((sum, day) => sum + day.meals.dinner.length, 0),
+    snack: historyData.reduce((sum, day) => sum + day.meals.snack.length, 0)
   };
 
-  const getMealIcon = (mealType) => {
-    const icons = {
-      breakfast: "🍳",
-      lunch: "🍱", 
-      dinner: "🍽️",
-      snack: "🍪"
-    };
-    return icons[mealType] || "🍴";
-  };
-
-  if (loading) return <div style={{ padding: "20px" }}>Loading history...</div>;
+  const maxCalories = Math.max(...historyData.map(day => day.totalCalories), calorieGoal);
 
   return (
-    <div style={{ padding: "20px", maxWidth: "900px", margin: "auto" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-        <h1>📊 Eating History</h1>
-        <select 
-          value={selectedDays} 
-          onChange={(e) => setSelectedDays(parseInt(e.target.value))}
-          style={{ padding: "8px", borderRadius: "4px", border: "1px solid #ddd" }}
-        >
-          <option value={7}>Last 7 days</option>
-          <option value={14}>Last 14 days</option>
-          <option value={30}>Last 30 days</option>
+    <div style={{ padding: '20px', maxWidth: '1200px', margin: 'auto' }}>
+      <h1>📊 Eating History & Insights</h1>
+      
+      {/* Time Period Selector */}
+      <div style={{ marginBottom: '20px' }}>
+        <label style={{ marginRight: '10px' }}>View last:</label>
+        <select value={days} onChange={(e) => setDays(parseInt(e.target.value))} style={{ padding: '5px' }}>
+          <option value={7}>7 days</option>
+          <option value={14}>14 days</option>
+          <option value={30}>30 days</option>
         </select>
       </div>
 
-      {history.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "40px", color: "#666" }}>
-          <h3>No eating history found</h3>
-          <p>Start logging your meals to see your eating patterns!</p>
+      {/* Summary Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', marginBottom: '30px' }}>
+        <div style={{ padding: '15px', border: '1px solid #ddd', borderRadius: '8px', textAlign: 'center' }}>
+          <h3>📈 Avg Daily Calories</h3>
+          <div style={{ fontSize: '2em', color: avgCalories > calorieGoal ? '#ff6b6b' : '#51cf66' }}>
+            {avgCalories}
+          </div>
+          <p style={{ fontSize: '0.9em', color: '#666' }}>Goal: {calorieGoal} kcal</p>
         </div>
-      ) : (
-        <div>
-          {history.map((day, dayIndex) => (
-            <div 
-              key={day.date} 
-              style={{ 
-                marginBottom: "25px", 
-                border: "1px solid #ddd", 
-                borderRadius: "8px", 
-                overflow: "hidden",
-                backgroundColor: dayIndex === 0 ? "#f8f9fa" : "white"
-              }}
-            >
-              <div style={{ 
-                padding: "15px", 
-                backgroundColor: dayIndex === 0 ? "#e3f2fd" : "#f5f5f5", 
-                borderBottom: "1px solid #ddd" 
-              }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <h3 style={{ margin: 0 }}>{formatDate(day.date)}</h3>
-                  <div style={{ fontSize: "1.1em", fontWeight: "bold", color: "#007bff" }}>
-                    🔥 {day.totalCalories} kcal
-                  </div>
+        
+        <div style={{ padding: '15px', border: '1px solid #ddd', borderRadius: '8px', textAlign: 'center' }}>
+          <h3>🎯 Goal Adherence</h3>
+          <div style={{ fontSize: '2em', color: adherenceRate > 70 ? '#51cf66' : adherenceRate > 40 ? '#ffd43b' : '#ff6b6b' }}>
+            {adherenceRate}%
+          </div>
+          <p style={{ fontSize: '0.9em', color: '#666' }}>{totalDays - daysOverGoal}/{totalDays} days on track</p>
+        </div>
+        
+        <div style={{ padding: '15px', border: '1px solid #ddd', borderRadius: '8px', textAlign: 'center' }}>
+          <h3>🍽️ Most Frequent Meal</h3>
+          <div style={{ fontSize: '1.5em', color: '#007bff' }}>
+            {Object.entries(mealFrequency).reduce((a, b) => mealFrequency[a[0]] > mealFrequency[b[0]] ? a : b)[0]}
+          </div>
+          <p style={{ fontSize: '0.9em', color: '#666' }}>
+            {Math.max(...Object.values(mealFrequency))} times logged
+          </p>
+        </div>
+      </div>
+
+      {/* Daily Calorie Chart */}
+      <div style={{ marginBottom: '30px', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+        <h3>📊 Daily Calorie Intake</h3>
+        <div style={{ display: 'flex', alignItems: 'end', gap: '5px', height: '200px', marginTop: '15px' }}>
+          {historyData.slice(-14).map((day, i) => {
+            const height = (day.totalCalories / maxCalories) * 180;
+            const isOverGoal = day.totalCalories > calorieGoal;
+            return (
+              <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+                <div style={{ fontSize: '0.7em', marginBottom: '5px', color: '#666' }}>
+                  {day.totalCalories}
+                </div>
+                <div 
+                  style={{ 
+                    width: '100%', 
+                    backgroundColor: isOverGoal ? '#ff6b6b' : '#51cf66',
+                    height: `${height}px`,
+                    borderRadius: '4px 4px 0 0',
+                    minHeight: '10px'
+                  }}
+                  title={`${day.date}: ${day.totalCalories} kcal`}
+                />
+                <div style={{ fontSize: '0.6em', marginTop: '5px', color: '#666', transform: 'rotate(-45deg)' }}>
+                  {new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                 </div>
               </div>
+            );
+          })}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '15px', gap: '20px', fontSize: '0.8em' }}>
+          <span><span style={{ color: '#51cf66' }}>■</span> Within Goal</span>
+          <span><span style={{ color: '#ff6b6b' }}>■</span> Over Goal</span>
+          <span style={{ color: '#666' }}>Goal: {calorieGoal} kcal</span>
+        </div>
+      </div>
 
-              <div style={{ padding: "15px" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "15px" }}>
-                  {Object.entries(day.meals).map(([mealType, meals]) => (
-                    <div key={mealType} style={{ 
-                      padding: "12px", 
-                      border: "1px solid #e0e0e0", 
-                      borderRadius: "6px",
-                      backgroundColor: meals.length > 0 ? "#fafafa" : "#f9f9f9"
-                    }}>
-                      <h4 style={{ 
-                        margin: "0 0 8px 0", 
-                        textTransform: "capitalize",
-                        color: meals.length > 0 ? "#333" : "#999"
-                      }}>
-                        {getMealIcon(mealType)} {mealType}
-                      </h4>
-                      
-                      {meals.length > 0 ? (
-                        <div>
-                          {meals.map((meal, mealIndex) => (
-                            <div key={mealIndex} style={{ 
-                              marginBottom: "6px", 
-                              fontSize: "0.9em",
-                              padding: "4px 0",
-                              borderBottom: mealIndex < meals.length - 1 ? "1px solid #eee" : "none"
-                            }}>
-                              <div style={{ fontWeight: "500" }}>{meal.dish}</div>
-                              <div style={{ color: "#666", fontSize: "0.8em" }}>
-                                {meal.calories} kcal • {new Date(meal.time).toLocaleTimeString('en-US', { 
-                                  hour: '2-digit', 
-                                  minute: '2-digit' 
-                                })}
-                              </div>
-                            </div>
-                          ))}
-                          <div style={{ 
-                            marginTop: "8px", 
-                            paddingTop: "8px", 
-                            borderTop: "1px solid #ddd",
-                            fontWeight: "bold", 
-                            fontSize: "0.9em",
-                            color: "#007bff"
-                          }}>
-                            Total: {meals.reduce((sum, meal) => sum + meal.calories, 0)} kcal
-                          </div>
-                        </div>
-                      ) : (
-                        <div style={{ color: "#999", fontSize: "0.9em", fontStyle: "italic" }}>
-                          No {mealType} logged
-                        </div>
-                      )}
-                    </div>
-                  ))}
+      {/* Meal Pattern Analysis */}
+      <div style={{ marginBottom: '30px', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+        <h3>🍽️ Meal Pattern Analysis</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px', marginTop: '15px' }}>
+          {Object.entries(mealFrequency).map(([meal, count]) => {
+            const percentage = totalDays > 0 ? Math.round((count / totalDays) * 100) : 0;
+            const emoji = meal === 'breakfast' ? '🍳' : meal === 'lunch' ? '🍱' : meal === 'dinner' ? '🍽️' : '🍪';
+            return (
+              <div key={meal} style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '2em' }}>{emoji}</div>
+                <div style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>{meal}</div>
+                <div style={{ fontSize: '1.2em', color: '#007bff' }}>{percentage}%</div>
+                <div style={{ fontSize: '0.8em', color: '#666' }}>{count} times</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* AI Insights & Suggestions */}
+      {aiSuggestions && (
+        <div style={{ padding: '20px', border: '2px solid #007bff', borderRadius: '8px', backgroundColor: '#f8f9ff' }}>
+          <h3 style={{ color: '#007bff' }}>🤖 AI-Powered Eating Insights</h3>
+          <div style={{ whiteSpace: 'pre-line', lineHeight: '1.6', fontSize: '0.95em' }}>
+            {aiSuggestions}
+          </div>
+        </div>
+      )}
+
+      {/* Recent History */}
+      <div style={{ marginTop: '30px' }}>
+        <h3>📅 Recent Daily Breakdown</h3>
+        <div style={{ display: 'grid', gap: '15px', marginTop: '15px' }}>
+          {historyData.slice(0, 5).map((day, i) => (
+            <div key={i} style={{ padding: '15px', border: '1px solid #ddd', borderRadius: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                <h4>{new Date(day.date).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</h4>
+                <div style={{ 
+                  padding: '4px 8px', 
+                  borderRadius: '4px', 
+                  fontSize: '0.8em',
+                  backgroundColor: day.totalCalories > calorieGoal ? '#ffe6e6' : '#e6ffe6',
+                  color: day.totalCalories > calorieGoal ? '#d63384' : '#198754'
+                }}>
+                  {day.totalCalories} kcal
                 </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '10px' }}>
+                {Object.entries(day.meals).map(([mealType, meals]) => (
+                  <div key={mealType}>
+                    <div style={{ fontWeight: 'bold', textTransform: 'capitalize', fontSize: '0.9em', marginBottom: '5px' }}>
+                      {mealType === 'breakfast' ? '🍳' : mealType === 'lunch' ? '🍱' : mealType === 'dinner' ? '🍽️' : '🍪'} {mealType}
+                    </div>
+                    {meals.length > 0 ? (
+                      meals.map((meal, j) => (
+                        <div key={j} style={{ fontSize: '0.8em', color: '#666', marginBottom: '2px' }}>
+                          {meal.dish} ({meal.calories} kcal)
+                        </div>
+                      ))
+                    ) : (
+                      <div style={{ fontSize: '0.8em', color: '#999', fontStyle: 'italic' }}>No items</div>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           ))}
         </div>
-      )}
+      </div>
     </div>
   );
 }

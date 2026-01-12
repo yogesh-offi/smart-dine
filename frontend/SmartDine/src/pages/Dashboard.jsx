@@ -6,8 +6,21 @@ function Dashboard() {
   const [suggestions, setSuggestions] = useState(null);
   const [loading, setLoading] = useState(true);
   const [newFood, setNewFood] = useState({ dish: "", calories: "", mealType: "breakfast" });
+  const [dietFilter, setDietFilter] = useState("all");
   
-  const userId = localStorage.getItem("userId");
+  const getUserId = () => {
+    try {
+      const user = localStorage.getItem("user");
+      if (user && user !== 'undefined') {
+        return JSON.parse(user)?._id;
+      }
+      return localStorage.getItem("userId");
+    } catch (error) {
+      return localStorage.getItem("userId");
+    }
+  };
+  
+  const userId = getUserId();
   const [userName, setUserName] = useState(localStorage.getItem("userName") || "User");
   
   // Update userName state when localStorage changes
@@ -21,10 +34,14 @@ function Dashboard() {
   useEffect(() => {
     if (userId) {
       fetchDashboardData();
+    } else {
+      console.error('No userId found');
+      setLoading(false);
     }
   }, [userId]);
 
   const fetchDashboardData = async () => {
+    setLoading(true);
     try {
       const [todayRes, suggestionsRes, userRes] = await Promise.all([
         axios.get(`http://localhost:5000/api/tracker/today/${userId}`),
@@ -45,6 +62,13 @@ function Dashboard() {
       setLoading(false);
     }
   };
+
+  // Filter suggestions based on diet preference
+  const filteredSuggestions = suggestions?.suggestions?.filter(suggestion => {
+    if (dietFilter === "veg") return suggestion.isVeg;
+    if (dietFilter === "non-veg") return !suggestion.isVeg;
+    return true;
+  }) || [];
 
   const addFood = async () => {
     if (!newFood.dish || !newFood.calories) return;
@@ -216,63 +240,163 @@ function Dashboard() {
       {/* Smart Suggestions */}
       {suggestions && suggestions.suggestions && suggestions.suggestions.length > 0 && (
         <div style={{ marginBottom: "30px" }}>
-          <h3>🤖 Smart Meal Suggestions</h3>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px" }}>
+            <h3>🤖 Smart Meal Suggestions</h3>
+            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              <div style={{ display: "flex", gap: "5px" }}>
+                <button 
+                  onClick={() => setDietFilter("all")}
+                  style={{ 
+                    padding: "6px 12px", 
+                    backgroundColor: dietFilter === "all" ? "#007bff" : "#f8f9fa", 
+                    color: dietFilter === "all" ? "white" : "#333", 
+                    border: "1px solid #ddd", 
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    fontSize: "0.8em"
+                  }}
+                >
+                  All
+                </button>
+                <button 
+                  onClick={() => setDietFilter("veg")}
+                  style={{ 
+                    padding: "6px 12px", 
+                    backgroundColor: dietFilter === "veg" ? "#28a745" : "#f8f9fa", 
+                    color: dietFilter === "veg" ? "white" : "#333", 
+                    border: "1px solid #ddd", 
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    fontSize: "0.8em"
+                  }}
+                >
+                  🥗 Veg
+                </button>
+                <button 
+                  onClick={() => setDietFilter("non-veg")}
+                  style={{ 
+                    padding: "6px 12px", 
+                    backgroundColor: dietFilter === "non-veg" ? "#dc3545" : "#f8f9fa", 
+                    color: dietFilter === "non-veg" ? "white" : "#333", 
+                    border: "1px solid #ddd", 
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    fontSize: "0.8em"
+                  }}
+                >
+                  🍗 Non-Veg
+                </button>
+              </div>
+              <button 
+                onClick={fetchDashboardData}
+                style={{ 
+                  padding: "8px 15px", 
+                  backgroundColor: "#28a745", 
+                  color: "white", 
+                  border: "none", 
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "0.9em"
+                }}
+              >
+                🔄 Refresh
+              </button>
+            </div>
+          </div>
           <p style={{ fontSize: "0.9em", color: "#666", marginBottom: "15px" }}>
             {suggestions?.suggestions?.[0]?.suggestedMealType ? 
               `Recommended for your next ${suggestions.suggestions[0].suggestedMealType} • ML-Powered` :
               "Personalized recommendations • ML-Powered"
             }
+            {dietFilter !== "all" && (
+              <span style={{ marginLeft: "10px", color: "#007bff" }}>
+                • Showing {dietFilter === "veg" ? "Vegetarian" : "Non-Vegetarian"} only ({filteredSuggestions.length} items)
+              </span>
+            )}
           </p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "15px" }}>
-            {suggestions.suggestions.map((suggestion, i) => (
-              <div key={i} style={{ padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
-                <h4>{suggestion.dish}</h4>
-                <p>🍴 {suggestion.restaurant}</p>
-                <p>🔥 {suggestion.calories} kcal</p>
-                <p style={{ fontSize: "0.9em", color: "#666" }}>💡 {suggestion.reason}</p>
-                <p style={{ fontSize: "0.8em", color: "#999" }}>🥗 {suggestion.isVeg ? "Vegetarian" : "Non-Vegetarian"} | 🌶️ Spice: {suggestion.spice}/5</p>
-                
-                {suggestion.suggestedMealType && (
-                  <p style={{ fontSize: "0.8em", color: "#007bff", fontWeight: "bold" }}>
-                    🍽️ Suggested for: {suggestion.suggestedMealType.charAt(0).toUpperCase() + suggestion.suggestedMealType.slice(1)}
-                  </p>
-                )}
-                
-                <div style={{ display: "flex", gap: "5px", marginTop: "10px", flexWrap: "wrap" }}>
-                  <button 
-                    onClick={() => addSuggestionToMeal(suggestion, suggestion.suggestedMealType || "snack")}
-                    style={{ 
-                      padding: "5px 10px", 
-                      fontSize: "0.8em", 
-                      backgroundColor: "#007bff", 
-                      color: "white", 
-                      border: "none", 
-                      borderRadius: "4px",
-                      cursor: "pointer"
-                    }}
-                  >
-                    ➕ Add to {(suggestion.suggestedMealType || "snack").charAt(0).toUpperCase() + (suggestion.suggestedMealType || "snack").slice(1)}
-                  </button>
+          {filteredSuggestions.length > 0 ? (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "15px" }}>
+              {filteredSuggestions.map((suggestion, i) => (
+                <div key={i} style={{ padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
+                  <h4>{suggestion.dish}</h4>
+                  <p>🍴 {suggestion.restaurant}</p>
+                  <p>🔥 {suggestion.calories} kcal</p>
+                  <p style={{ fontSize: "0.9em", color: "#666" }}>💡 {suggestion.reason}</p>
+                  <p style={{ fontSize: "0.8em", color: "#999" }}>🥗 {suggestion.isVeg ? "Vegetarian" : "Non-Vegetarian"} | 🌶️ Spice: {suggestion.spice}/5</p>
                   
-                  <select 
-                    onChange={(e) => {
-                      if (e.target.value) {
-                        addSuggestionToMeal(suggestion, e.target.value);
-                        e.target.value = ""; // Reset selection
-                      }
-                    }}
-                    style={{ padding: "5px", fontSize: "0.8em", borderRadius: "4px" }}
-                  >
-                    <option value="">Add to other meal...</option>
-                    <option value="breakfast">🍳 Breakfast</option>
-                    <option value="lunch">🍱 Lunch</option>
-                    <option value="dinner">🍽️ Dinner</option>
-                    <option value="snack">🍪 Snack</option>
-                  </select>
+                  {suggestion.suggestedMealType && (
+                    <p style={{ fontSize: "0.8em", color: "#007bff", fontWeight: "bold" }}>
+                      🍽️ Suggested for: {suggestion.suggestedMealType.charAt(0).toUpperCase() + suggestion.suggestedMealType.slice(1)}
+                    </p>
+                  )}
+                  
+                  <div style={{ display: "flex", gap: "5px", marginTop: "10px", flexWrap: "wrap" }}>
+                    <button 
+                      onClick={() => addSuggestionToMeal(suggestion, suggestion.suggestedMealType || "snack")}
+                      style={{ 
+                        padding: "5px 10px", 
+                        fontSize: "0.8em", 
+                        backgroundColor: "#007bff", 
+                        color: "white", 
+                        border: "none", 
+                        borderRadius: "4px",
+                        cursor: "pointer"
+                      }}
+                    >
+                      ➕ Add to {(suggestion.suggestedMealType || "snack").charAt(0).toUpperCase() + (suggestion.suggestedMealType || "snack").slice(1)}
+                    </button>
+                    
+                    <select 
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          addSuggestionToMeal(suggestion, e.target.value);
+                          e.target.value = ""; // Reset selection
+                        }
+                      }}
+                      style={{ padding: "5px", fontSize: "0.8em", borderRadius: "4px" }}
+                    >
+                      <option value="">Add to other meal...</option>
+                      <option value="breakfast">🍳 Breakfast</option>
+                      <option value="lunch">🍱 Lunch</option>
+                      <option value="dinner">🍽️ Dinner</option>
+                      <option value="snack">🍪 Snack</option>
+                    </select>
+                  </div>
                 </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ 
+              padding: "20px", 
+              textAlign: "center", 
+              color: "#666", 
+              backgroundColor: "#f8f9fa", 
+              borderRadius: "8px",
+              border: "1px dashed #ddd"
+            }}>
+              No {dietFilter === "veg" ? "vegetarian" : "non-vegetarian"} suggestions available right now. 
+              <button 
+                onClick={() => setDietFilter("all")}
+                style={{ 
+                  marginLeft: "10px", 
+                  padding: "4px 8px", 
+                  backgroundColor: "#007bff", 
+                  color: "white", 
+                  border: "none", 
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "0.8em"
+                }}
+              >
+                Show All
+              </button>
+              <div style={{ marginTop: "10px", fontSize: "0.8em", color: "#999" }}>
+                Total suggestions: {suggestions?.suggestions?.length || 0}, 
+                Veg: {suggestions?.suggestions?.filter(s => s.isVeg).length || 0}, 
+                Non-Veg: {suggestions?.suggestions?.filter(s => !s.isVeg).length || 0}
               </div>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
       )}
 

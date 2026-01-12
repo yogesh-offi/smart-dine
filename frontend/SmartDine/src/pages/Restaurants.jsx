@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "../RestaurantsMenu.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -12,20 +13,24 @@ function Restaurants() {
   }, []);
 
   return (
-    <div>
-      <h2>Restaurants</h2>
+    <div className="restaurants-container">
+      <div className="page-header">
+        <h2>Restaurants</h2>
+      </div>
 
-      {restaurants.map(r => (
-        <div
-          key={r._id}
-          onClick={() => navigate(`/menu/${r._id}`)}
-          style={{ border: "1px solid #ccc", margin: 10, padding: 10, cursor: "pointer" }}
-        >
-          <h3>{r.name}</h3>
-          <p>{r.location.city}</p>
-          <p>⭐ {r.rating}</p>
-        </div>
-      ))}
+      <div className="restaurants-grid">
+        {restaurants.map(r => (
+          <div
+            key={r._id}
+            className="restaurant-card"
+            onClick={() => navigate(`/menu/${r._id}`)}
+          >
+            <h3 className="restaurant-name">{r.name}</h3>
+            <p className="restaurant-location">📍 {r.location.city}</p>
+            <p className="restaurant-rating">⭐ {r.rating}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -65,7 +65,7 @@ router.get("/suggestions/:userId", async (req, res) => {
       if (remainingCalories > 300) {
         const items = await MenuItem.find({ 
           calories: { $lte: remainingCalories, $gte: 150 } 
-        }).populate("restaurantId").limit(3);
+        }).populate("restaurantId").limit(6);
         
         suggestions = items.map(item => ({
           dish: item.name,
@@ -77,10 +77,18 @@ router.get("/suggestions/:userId", async (req, res) => {
     }
 
     // Enhanced ML-based health score
-    let healthScore = 50; // Base score
+    let healthScore = 0; // Start from 0 instead of 50
     
-    // Calorie adherence (40% weight)
-    const calorieAdherence = Math.max(0, 100 - Math.abs(remainingCalories) / calorieGoal * 100);
+    // Calorie adherence (40% weight) - penalize exceeding goal heavily
+    let calorieAdherence;
+    if (remainingCalories >= 0) {
+      // Under or at goal - reward staying within limits
+      calorieAdherence = Math.min(100, 100 - (Math.abs(remainingCalories) / calorieGoal * 50));
+    } else {
+      // Over goal - heavy penalty for exceeding
+      const excessPercentage = Math.abs(remainingCalories) / calorieGoal * 100;
+      calorieAdherence = Math.max(0, 100 - excessPercentage * 2); // Double penalty for excess
+    }
     healthScore += calorieAdherence * 0.4;
     
     // Meal frequency (30% weight) - encourage regular eating
@@ -103,6 +111,9 @@ router.get("/suggestions/:userId", async (req, res) => {
     
     healthScore += dietCompliance * 0.3;
     healthScore = Math.min(100, Math.max(0, healthScore));
+    
+    console.log(`Health Score Debug: Base=0, CalorieAdherence=${Math.round(calorieAdherence)}, MealFreq=${Math.round(mealFrequencyScore)}, DietComp=${Math.round(dietCompliance)}, Final=${Math.round(healthScore)}`);
+    console.log(`Calorie Details: Consumed=${consumedCalories}, Goal=${calorieGoal}, Remaining=${remainingCalories}`);
     
     res.json({
       consumedCalories,
@@ -197,6 +208,112 @@ router.get("/history/:userId", async (req, res) => {
   } catch (err) {
     console.error("History fetch error:", err);
     res.status(500).json({ error: "Failed to fetch history" });
+  }
+});
+
+router.get("/ai-insights/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { days = 7 } = req.query;
+    
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const daysAgo = new Date();
+    daysAgo.setDate(daysAgo.getDate() - parseInt(days));
+    daysAgo.setHours(0, 0, 0, 0);
+    
+    const logs = await CalorieLog.find({
+      userId,
+      date: { $gte: daysAgo }
+    }).sort({ date: -1 });
+    
+    const calorieGoal = user.preferences?.calorieGoal || 2000;
+    const healthGoal = user.preferences?.healthGoal || "maintain";
+    const dietType = user.preferences?.dietType || "non-veg";
+    
+    // Analyze patterns
+    const dailyCalories = {};
+    const mealPatterns = { breakfast: 0, lunch: 0, dinner: 0, snack: 0 };
+    let totalCalories = 0;
+    
+    logs.forEach(log => {
+      const dateKey = log.date.toISOString().split('T')[0];
+      dailyCalories[dateKey] = (dailyCalories[dateKey] || 0) + log.calories;
+      mealPatterns[log.mealType]++;
+      totalCalories += log.calories;
+    });
+    
+    const avgDaily = Object.keys(dailyCalories).length > 0 ? totalCalories / Object.keys(dailyCalories).length : 0;
+    const daysOverGoal = Object.values(dailyCalories).filter(cal => cal > calorieGoal).length;
+    const adherenceRate = Object.keys(dailyCalories).length > 0 ? ((Object.keys(dailyCalories).length - daysOverGoal) / Object.keys(dailyCalories).length) * 100 : 0;
+    
+    // Generate AI insights
+    let insights = `Based on your ${days}-day eating history:\n\n`;
+    
+    // Calorie analysis
+    if (avgDaily > calorieGoal * 1.1) {
+      insights += `🔴 CALORIE CONCERN: You're averaging ${Math.round(avgDaily)} kcal/day, which is ${Math.round(avgDaily - calorieGoal)} kcal over your ${calorieGoal} kcal goal.\n`;
+      insights += `💡 SUGGESTION: Try reducing portion sizes by 20% and replace high-calorie snacks with fruits or nuts.\n\n`;
+    } else if (avgDaily < calorieGoal * 0.8) {
+      insights += `🟡 CALORIE NOTICE: You're averaging ${Math.round(avgDaily)} kcal/day, which is below your ${calorieGoal} kcal goal.\n`;
+      insights += `💡 SUGGESTION: Add healthy snacks like nuts, yogurt, or protein smoothies between meals.\n\n`;
+    } else {
+      insights += `🟢 CALORIE BALANCE: Great job! Your average ${Math.round(avgDaily)} kcal/day is well-aligned with your ${calorieGoal} kcal goal.\n\n`;
+    }
+    
+    // Meal pattern analysis
+    const totalMeals = Object.values(mealPatterns).reduce((a, b) => a + b, 0);
+    const avgMealsPerDay = totalMeals / parseInt(days);
+    
+    if (avgMealsPerDay < 3) {
+      insights += `🔴 MEAL FREQUENCY: You're averaging ${avgMealsPerDay.toFixed(1)} meals/day. This can slow metabolism.\n`;
+      insights += `💡 SUGGESTION: Aim for 3 main meals + 1-2 healthy snacks. Set meal reminders on your phone.\n\n`;
+    } else if (mealPatterns.breakfast < parseInt(days) * 0.7) {
+      insights += `🟡 BREAKFAST PATTERN: You're skipping breakfast ${Math.round((1 - mealPatterns.breakfast/parseInt(days)) * 100)}% of the time.\n`;
+      insights += `💡 SUGGESTION: Start with simple options like overnight oats, boiled eggs, or fruit smoothies.\n\n`;
+    }
+    
+    // Goal-specific advice
+    if (healthGoal === "Lose Weight" && adherenceRate < 70) {
+      insights += `🎯 WEIGHT LOSS FOCUS: With ${Math.round(adherenceRate)}% goal adherence, consider:\n`;
+      insights += `• Meal prep on weekends to avoid impulsive food choices\n`;
+      insights += `• Use smaller plates to control portions naturally\n`;
+      insights += `• Drink water before meals to increase satiety\n\n`;
+    } else if (healthGoal === "Gain" && avgDaily < calorieGoal) {
+      insights += `🎯 WEIGHT GAIN FOCUS: To reach your goals:\n`;
+      insights += `• Add healthy fats like avocado, nuts, and olive oil\n`;
+      insights += `• Include protein-rich snacks between meals\n`;
+      insights += `• Try liquid calories like smoothies or milk-based drinks\n\n`;
+    }
+    
+    // Diet compliance
+    if (dietType === "veg") {
+      const nonVegMeals = logs.filter(log => 
+        log.dish.toLowerCase().includes("chicken") || 
+        log.dish.toLowerCase().includes("mutton") ||
+        log.dish.toLowerCase().includes("fish")
+      ).length;
+      
+      if (nonVegMeals > 0) {
+        insights += `🥗 DIET COMPLIANCE: Found ${nonVegMeals} non-vegetarian meals. Consider plant-based protein alternatives like paneer, dal, or tofu.\n\n`;
+      }
+    }
+    
+    // Positive reinforcement
+    if (adherenceRate > 80) {
+      insights += `🌟 EXCELLENT PROGRESS: You're maintaining great consistency! Keep up the momentum.\n`;
+    } else if (adherenceRate > 60) {
+      insights += `👍 GOOD PROGRESS: You're on the right track. Small improvements will yield big results.\n`;
+    }
+    
+    insights += `\n🤖 This analysis is powered by your eating patterns and ML algorithms. Update your goals anytime in settings.`;
+    
+    res.json({ insights });
+    
+  } catch (err) {
+    console.error("AI insights error:", err);
+    res.status(500).json({ error: "Failed to generate insights" });
   }
 });
 

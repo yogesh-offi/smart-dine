@@ -45,21 +45,21 @@ def get_dashboard_recommendations(user_id, consumed_calories, calorie_goal):
         # Smart meal progression logic
         suggested_meal_type = "snack"  # default
         
-        if "breakfast" not in meal_types_logged:
+        if "breakfast" not in meal_types_logged and current_hour < 11:
             suggested_meal_type = "breakfast"
-        elif "lunch" not in meal_types_logged and current_hour >= 11:
+        elif "lunch" not in meal_types_logged and current_hour >= 11 and current_hour < 17:
             suggested_meal_type = "lunch"
         elif "dinner" not in meal_types_logged and current_hour >= 17:
             suggested_meal_type = "dinner"
         elif len(meal_types_logged) >= 3:  # All main meals done, suggest snack
             suggested_meal_type = "snack"
         else:
-            # Time-based fallback
-            if current_hour < 10:
+            # Enhanced time-based fallback
+            if current_hour < 11 and "breakfast" not in meal_types_logged:
                 suggested_meal_type = "breakfast"
-            elif current_hour < 15:
+            elif current_hour >= 11 and current_hour < 17 and "lunch" not in meal_types_logged:
                 suggested_meal_type = "lunch"
-            elif current_hour >= 17:
+            elif current_hour >= 17 and "dinner" not in meal_types_logged:
                 suggested_meal_type = "dinner"
             else:
                 suggested_meal_type = "snack"
@@ -103,9 +103,30 @@ def get_dashboard_recommendations(user_id, consumed_calories, calorie_goal):
         
         df = pd.DataFrame(rows)
         
-        # Apply diet constraints
-        if diet_type == "veg":
-            df = df[df["isVeg"] == True]
+        # Force include some non-veg items if none exist in current selection
+        if len(df[df['isVeg'] == False]) == 0:
+            # Get some non-veg items without meal-type restriction
+            non_veg_items = list(db.menuitems.find({
+                "isVeg": False,
+                "calories": {"$lte": remaining_calories + 200}
+            }).limit(10))
+            
+            for item in non_veg_items:
+                restaurant = db.restaurants.find_one({"_id": item["restaurantId"]})
+                if restaurant:
+                    rows.append({
+                        "item_id": str(item["_id"]),
+                        "name": item.get("name"),
+                        "restaurant": restaurant.get("name", "Unknown"),
+                        "isVeg": item.get("isVeg", False),
+                        "calories": item.get("calories", 200),
+                        "spice": item.get("spicinessLevel", 2),
+                        "rating": restaurant.get("rating", 3.5),
+                        "text": f"{item.get('name','')} {item.get('description','')}"
+                    })
+            
+            # Recreate dataframe with additional items
+            df = pd.DataFrame(rows)
         
         # Filter by remaining calories (with some buffer)
         df = df[df["calories"] <= remaining_calories + 100]
@@ -159,58 +180,57 @@ def get_dashboard_recommendations(user_id, consumed_calories, calorie_goal):
         # Sort by score first
         result = sorted(final_scores, key=lambda x: x["final_score"], reverse=True)
         
-        # Ensure dish diversity - no duplicate dish names and variety in cooking styles
+        # Ensure dish diversity - avoid same dish from multiple restaurants
         diverse_result = []
         seen_dishes = set()
-        seen_styles = set()
+        veg_items = [item for item in result if item["isVeg"]]
+        non_veg_items = [item for item in result if not item["isVeg"]]
         
-        for item in result:
-            # Normalize dish name for comparison (remove common variations)
-            dish_base = item["dish"].lower()
-            original_dish = dish_base
-            
-            # Extract cooking style
-            cooking_style = "other"
-            if "curry" in dish_base or "kuzhambu" in dish_base:
-                cooking_style = "curry"
-            elif "fry" in dish_base or "roast" in dish_base:
-                cooking_style = "fried"
-            elif "biryani" in dish_base:
-                cooking_style = "biryani"
-            elif "rice" in dish_base and "fried" not in dish_base:
-                cooking_style = "rice"
-            elif "dosa" in dish_base or "idli" in dish_base:
-                cooking_style = "tiffin"
-            
-            # Remove common suffixes for base comparison
-            dish_base = dish_base.replace(" curry", "").replace(" fry", "").replace(" masala", "")
-            dish_base = dish_base.replace(" biryani", "").replace(" rice", "").replace(" kuzhambu", "")
-            
-            # Prioritize different base dishes, but allow different cooking styles
-            should_add = False
-            if dish_base not in seen_dishes:
-                should_add = True
-            elif cooking_style not in seen_styles and len(diverse_result) < 2:
-                should_add = True  # Allow different cooking styles for variety
-            
-            if should_add:
-                diverse_result.append(item)
-                seen_dishes.add(dish_base)
-                seen_styles.add(cooking_style)
-                
-                # Stop when we have 3 diverse dishes
-                if len(diverse_result) >= 3:
-                    break
+        # Force alternating selection to ensure variety
+        max_items = 6
+        veg_added = 0
+        non_veg_added = 0
         
-        # If we don't have enough diverse dishes, fill with remaining items
-        if len(diverse_result) < 3:
-            for item in result:
-                if item not in diverse_result:
-                    diverse_result.append(item)
-                    if len(diverse_result) >= 3:
-                        break
+        # Add items alternating between veg and non-veg
+        for i in range(max_items):
+            if i % 2 == 0:  # Even positions: try veg first
+                if veg_added < len(veg_items) and veg_added < 3:  # Max 3 veg
+                    for item in veg_items[veg_added:]:
+                        dish_base = item["dish"].lower().split()[0]  # Use first word only
+                        if dish_base not in seen_dishes:
+                            diverse_result.append(item)
+                            seen_dishes.add(dish_base)
+                            veg_added = veg_items.index(item) + 1
+                            break
+                # If no unique veg available, try non-veg
+                if len(diverse_result) == i:  # No veg was added
+                    for item in non_veg_items[non_veg_added:]:
+                        dish_base = item["dish"].lower().split()[0]
+                        if dish_base not in seen_dishes:
+                            diverse_result.append(item)
+                            seen_dishes.add(dish_base)
+                            non_veg_added = non_veg_items.index(item) + 1
+                            break
+            else:  # Odd positions: try non-veg first
+                if non_veg_added < len(non_veg_items) and non_veg_added < 3:  # Max 3 non-veg
+                    for item in non_veg_items[non_veg_added:]:
+                        dish_base = item["dish"].lower().split()[0]
+                        if dish_base not in seen_dishes:
+                            diverse_result.append(item)
+                            seen_dishes.add(dish_base)
+                            non_veg_added = non_veg_items.index(item) + 1
+                            break
+                # If no unique non-veg available, try veg
+                if len(diverse_result) == i:  # No non-veg was added
+                    for item in veg_items[veg_added:]:
+                        dish_base = item["dish"].lower().split()[0]
+                        if dish_base not in seen_dishes:
+                            diverse_result.append(item)
+                            seen_dishes.add(dish_base)
+                            veg_added = veg_items.index(item) + 1
+                            break
         
-        return diverse_result[:3]
+        return diverse_result[:6]
         
     except Exception as e:
         print(f"Error in dashboard recommender: {e}", file=sys.stderr)
